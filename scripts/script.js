@@ -1,15 +1,15 @@
 //получаем первый танк
 const svg_t1k = document.getElementById('t1k'); 
 const svg_t1b = document.getElementById('t1b');
-svg_t1k.style.transformOrigin = 'center center';
-svg_t1b.style.transformOrigin = '0 0';
+svg_t1k.style.transformOrigin = 'center center'; //только для поворотов (относительно центра)
+svg_t1b.style.transformOrigin = '0 0'; //только для поворотов (относительно левого верхнего угла)
 const t1 = {
     svg_t1k: svg_t1k,
 	svg_t1b: svg_t1b,
-    x: 0,
-    y: 0,
-    k_angle: 0,
-	b_angle: 0,
+    x: 0, //левый верхний угол
+    y: 0, //левый верхний угол
+    k_angle: 0, //0 = влево
+	b_angle: 0, //0 = влево
     speed: 0,
   };
 const bombs = [];
@@ -112,8 +112,8 @@ function cloneBomb(){
 
 	bombs.push({
 		svg: bombSVG,
-		x: t1.x,
-		y: t1.y,
+		x: t1.x + 30, //центр танка
+		y: t1.y + 20, //центр танка
 		angle: t1.k_angle + t1.b_angle,
 		speed: 2,
 	});
@@ -220,7 +220,7 @@ function updateAnts() {
 		bomb.y += dy;
 
 		// Обработка столкновений с краями экрана
-		if (bomb.x < 0 || bomb.x > window.innerWidth || bomb.y < 0 || bomb.y > window.innerHeight) {
+		if (bomb.x < 0 || bomb.x > window.innerWidth - 10 || bomb.y < 0 || bomb.y > window.innerHeight - 10) { //размер снаряда 10 на 10.
 			bombsToDelete.push(bomb);
 		//  bomb.angle += 180; // Разворот
 		//  bomb.x = Math.max(0, Math.min(ant.x, window.innerWidth));
