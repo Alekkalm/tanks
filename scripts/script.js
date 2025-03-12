@@ -27,6 +27,31 @@ const antSize = 20;
 const avoidRadius = 25; 
 const followRadius = 150; 
 
+//отладка. получаем размеры
+antTemplate.style.transform = `translate(${500}px, ${300}px) rotate(${45}deg)`;
+
+const antWidth = antTemplate.getAttribute('width') //получаем размеры SVG. похоже что тоже без учета трансформации. (на rotate не реагирует).
+const antHeight = antTemplate.getAttribute('height'); 
+console.log(`antWidth: ${antWidth}, antHeight: ${antHeight}`);
+
+// Получаем bounding box группы
+const bbox = antTemplate.getBBox(); //получаем размеры и координаты bounding box элемента SVG до применения любых трансформаций
+console.log(`x: ${bbox.x}, y: ${bbox.y}, width: ${bbox.width}, height: ${bbox.height}`);
+
+//получаем 
+
+/*Метод getBoundingClientRect() возвращает объект DOMRect, который содержит координаты и размеры элемента с учетом всех трансформаций: 
+*    x, y — координаты верхнего левого угла элемента относительно viewport.
+*    width, height — размеры элемента.
+*    top, right, bottom, left — координаты границ элемента относительно viewport.
+*Важно:
+*    getBoundingClientRect() учитывает все трансформации, включая translate, rotate, scale и другие.
+*/	
+const rect = antTemplate.getBoundingClientRect();
+console.log(rect); // { x, y, width, height, top, right, bottom, left }
+//получаем размер новой коробки, которая увеличилась из-за поворота муравья.
+//отладка. конец.
+
 for (let i = 0; i < numAnts; i++) {
 	
   const antElem = antTemplate.cloneNode(true); // Клонируем шаблон
@@ -114,15 +139,28 @@ function cloneBomb(){
 	let dx = Math.cos(sumAngle * Math.PI / 180) * 35; //35 - это длинна дула (от центра башни до конца дула). Чтобы снаряд появлялся на конце дула.
 	let dy = Math.sin(sumAngle * Math.PI / 180) * 35; //вниз - положительный угол, вверх - отрицательный. вправо = 0.
 
+	//let maxAngle = Math.max(sumAngle, t1.k_angle); 
+	//let minAngle = Math.min(sumAngle, t1.k_angle);
+	//let bombAngle = minAngle + (maxAngle - minAngle)/2; 
 	bombs.push({
 		svg: bombSVG,
 		x: t1.x + 30 + dx, //+30 - это центр танка
 		y: t1.y + 20 + dy, //+20 - центр танка
-		angle: sumAngle,
+		angle: sumAngle,//bombAngle,
 		speed: 2,
 	});
 }
 
+function collision(a, b){
+	const a_CenterX = a.x + a.width/2;
+	const a_CenterY = a.y + a.height/2;
+	const b_CenterX = b.x + b.width/2;
+	const b_CenterY = b.y + b.height/2;
+	const dist = Math.sqrt(Math.pow(a_CenterX - b_CenterX, 2) + Math.pow(a_CenterY - b_CenterY, 2)); //расстояние между центрами
+	const a_diametr = (a.width + a.height)/2; //диаметр - среднее между шириной и высотой.
+	const b_diametr = (b.width + b.height)/2; //диаметр - среднее между шириной и высотой.
+	return dist < (a_diametr + b_diametr)/2;
+}
 
 function updateAnts() {
 	//муравьи
@@ -216,6 +254,7 @@ function updateAnts() {
 
 	//снаряды
 	const bombsToDelete = [];
+	const antsToDelete = [];
 	bombs.forEach((bomb, index) => {
 		let dx = Math.cos(bomb.angle * Math.PI / 180) * bomb.speed; //вниз - положительный угол, вверх - отрицательный. вправо = 0.
 		let dy = Math.sin(bomb.angle * Math.PI / 180) * bomb.speed;
@@ -231,12 +270,30 @@ function updateAnts() {
 		//  bomb.y = Math.max(0, Math.min(ant.y, window.innerHeight));
 		}
 		bomb.svg.style.transform = `translate(${bomb.x}px, ${bomb.y}px)`;
+		
+		
+		//столкновения с муравьями
+		const bombRect = bomb.svg.getBoundingClientRect();
+		ants.forEach((ant, index) => {
+			const antRect = ant.element.getBoundingClientRect();
+			if (collision(bombRect, antRect)) { //размер снаряда 10 на 10.
+				//ant.element.style.fill = 'red';
+				ant.element.setAttribute('fill', 'red');
+				debugger
+				antsToDelete.push(ant);
+				bombsToDelete.push(bomb);
+			}
+		});	
 	});
 
 	bombsToDelete.forEach((bombToDelete, index) => {
         bombToDelete.svg.remove(); // Удаляем SVG из DOM
 		bombs.splice(bombs.indexOf(bombToDelete), 1); // Удаляем объект bomb из массива bombs
 	});
+	//antsToDelete.forEach((antToDelete, index) => {
+    //    antToDelete.element.remove(); // Удаляем SVG из DOM
+	//	ants.splice(ants.indexOf(antToDelete), 1); // Удаляем объект bomb из массива bombs
+	//});
 	
   requestAnimationFrame(updateAnts);
 }
