@@ -68,7 +68,9 @@ let ArrowUp_pressed = false;
 let ArrowDown_pressed = false;
 let ArrowLeft_pressed = false;
 let ArrowRight_pressed = false;
-
+let Space_pressed = false;
+let Space_pressed_previous = false;
+let Space_pressed_front = false;
 
 // Обработчик события нажатия клавиши
 document.addEventListener('keydown', (event) => {
@@ -81,7 +83,7 @@ document.addEventListener('keydown', (event) => {
     case 'ArrowDown': ArrowDown_pressed = true; break; 
     case 'ArrowLeft': ArrowLeft_pressed = true; break;
     case 'ArrowRight': ArrowRight_pressed = true; break;
-	case 'Space': cloneBomb(); break;
+	case 'Space': Space_pressed = true; break;
   }
   //console.log(event.code);
 });
@@ -97,6 +99,7 @@ document.addEventListener('keyup', (event) => {
     case 'ArrowDown': ArrowDown_pressed = false; break; 
     case 'ArrowLeft': ArrowLeft_pressed = false; break;
     case 'ArrowRight': ArrowRight_pressed = false; break;
+	case 'Space': Space_pressed = false; break;
   }
 });
 
@@ -118,6 +121,7 @@ function cloneBomb(){
 
 
 function updateAnts() {
+	//муравьи
   ants.forEach((ant, index) => {
     let dx = 0;
     let dy = 0;
@@ -184,7 +188,15 @@ function updateAnts() {
 	if(ArrowDown_pressed){
 		t1.speed = -1;
 	}
-
+	//фронт нажатия
+	Space_pressed_front = (!Space_pressed_previous && Space_pressed) ? true : false;
+	Space_pressed_previous = Space_pressed;
+	//выстрел
+	if(Space_pressed){
+		cloneBomb();
+	}
+	
+	
 	
 	//повторно используем dx и dy теперь для танков
 	let dx = Math.cos(t1.k_angle * Math.PI / 180) * t1.speed;
@@ -218,10 +230,8 @@ function updateAnts() {
 	});
 
 	bombsToDelete.forEach((bombToDelete, index) => {
-		//if (bombToDelete.svg) {
-            bombToDelete.svg.remove(); // Удаляем SVG из DOM
-        //}
-		bombs.splice(bombs.indexOf(bombToDelete), 1); // Удаляем первое вхождение элемента 
+        bombToDelete.svg.remove(); // Удаляем SVG из DOM
+		bombs.splice(bombs.indexOf(bombToDelete), 1); // Удаляем объект bomb из массива bombs
 	});
 	
   requestAnimationFrame(updateAnts);
