@@ -8,7 +8,8 @@ const t1 = {
 	svg_t1b: svg_t1b,
     x: 0,
     y: 0,
-    angle: 0,
+    k_angle: 0,
+	b_angle: 0,
     speed: 0,
   };
 
@@ -147,12 +148,14 @@ function updateAnts() {
 	
 	
 	//танки
-	if(keyA_pressed) t1.x -= 0.1;
-	if(keyD_pressed) t1.x += 0.1;
-	if(keyW_pressed) t1.y -= 0.1;
-	if(keyS_pressed) t1.y += 0.1;
-	if(ArrowLeft_pressed) t1.angle -= 0.1;
-	if(ArrowRight_pressed) t1.angle += 0.1;
+	//if(keyA_pressed) t1.x -= 0.1;
+	//if(keyD_pressed) t1.x += 0.1;
+	if(keyA_pressed) t1.b_angle -= 0.1;
+	if(keyD_pressed) t1.b_angle += 0.1;
+	//if(keyW_pressed) t1.y -= 0.1;
+	//if(keyS_pressed) t1.y += 0.1;
+	if(ArrowLeft_pressed) t1.k_angle -= 0.1;
+	if(ArrowRight_pressed) t1.k_angle += 0.1;
 	t1.speed = 0;
 	if(ArrowUp_pressed){
 		t1.speed = 0.1;
@@ -162,8 +165,8 @@ function updateAnts() {
 	}
 	
 	//повторно используем dx и dy теперь для танков
-	dx = Math.cos(t1.angle * Math.PI / 180) * t1.speed;
-    dy = Math.sin(t1.angle * Math.PI / 180) * t1.speed;
+	dx = Math.cos(t1.k_angle * Math.PI / 180) * t1.speed;
+    dy = Math.sin(t1.k_angle * Math.PI / 180) * t1.speed;
 	
 	t1.x += dx;
     t1.y += dy;
@@ -171,9 +174,9 @@ function updateAnts() {
 	//t1.x += 1;
     //t1.y += 1;
 	//t1.angle += 1;
-	t1.svg_t1k.style.transform = `translate(${t1.x}px, ${t1.y}px)rotate(${t1.angle}deg)`;
+	t1.svg_t1k.style.transform = `translate(${t1.x}px, ${t1.y}px)rotate(${t1.k_angle}deg)`;
 	//                                                           |смещение башни по y| |центр вращения башни 15px, 15px|
-	t1.svg_t1b.style.transform = `translate(${t1.x}px, ${t1.y}px) translate(20px, 10px) translate(15px, 15px) rotate(${t1.angle}deg) translate(-15px, -15px)`;
+	t1.svg_t1b.style.transform = `translate(${t1.x}px, ${t1.y}px) translate(20px, 10px) translate(15px, 15px) rotate(${t1.k_angle + t1.b_angle}deg) translate(-15px, -15px)`;
   });
 
   requestAnimationFrame(updateAnts);
