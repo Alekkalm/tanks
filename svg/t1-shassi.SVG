@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with "sPlan" (http://www.abacom-online.de) -->
+<svg version="1.1" baseProfile="full"
+xmlns="http://www.w3.org/2000/svg"
+width="150" height="130">
+<title>t1-shassi</title>
+<defs>
+<style type="text/css">
+<![CDATA[
+polyline {stroke-linecap:round; stroke-linejoin:round}
+polygon {stroke-linecap:round; stroke-linejoin:round}
+path {stroke-linecap:round; stroke-linejoin:round}
+circle {stroke-linecap:round; stroke-linejoin:round}
+]]>
+</style>
+</defs>
+<path fill="none" stroke="rgb(0,0,0)" stroke-width="2" style="stroke-linecap:square; stroke-linejoin:miter" d=" M 40 40 L 110 40 110 90 40 90 40 40" />
+<path fill="none" stroke="rgb(0,0,0)" stroke-width="2" style="stroke-linecap:square; stroke-linejoin:miter" d=" M 40 40 L 110 40 110 50 40 50 40 40" />
+<path fill="none" stroke="rgb(0,0,0)" stroke-width="2" style="stroke-linecap:square; stroke-linejoin:miter" d=" M 40 80 L 110 80 110 90 40 90 40 80" />
+<polyline points="40.00 50.00 50.00 40.00 50.00 50.00 60.00 40.00 60.00 50.00 70.00 40.00 70.00 50.00 80.00 40.00 80.00 50.00 90.00 40.00 90.00 50.00 100.00 40.00 100.00 50.00 110.00 40.00" fill="none" stroke="rgb(0,0,0)" stroke-width="2" />
+<polyline points="40.00 80.00 50.00 90.00 50.00 80.00 60.00 90.00 60.00 80.00 70.00 90.00 70.00 80.00 80.00 90.00 80.00 80.00 90.00 90.00 90.00 80.00 100.00 90.00 100.00 80.00 110.00 90.00" fill="none" stroke="rgb(0,0,0)" stroke-width="2" />
+</svg>
