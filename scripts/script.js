@@ -146,12 +146,27 @@ function updateAnts() {
     ant.element.style.transform = `rotate(${angle}deg)`;
 	
 	
+	//танки
 	if(keyA_pressed) t1.x -= 0.1;
 	if(keyD_pressed) t1.x += 0.1;
 	if(keyW_pressed) t1.y -= 0.1;
 	if(keyS_pressed) t1.y += 0.1;
 	if(ArrowLeft_pressed) t1.angle -= 0.1;
 	if(ArrowRight_pressed) t1.angle += 0.1;
+	t1.speed = 0;
+	if(ArrowUp_pressed){
+		t1.speed = 0.1;
+	}
+	if(ArrowDown_pressed){
+		t1.speed = -0.1;
+	}
+	
+	//повторно используем dx и dy теперь для танков
+	dx = Math.cos(t1.angle * Math.PI / 180) * t1.speed;
+    dy = Math.sin(t1.angle * Math.PI / 180) * t1.speed;
+	
+	t1.x += dx;
+    t1.y += dy;
 	
 	//t1.x += 1;
     //t1.y += 1;
