@@ -175,8 +175,10 @@ function updateAnts() {
     //t1.y += 1;
 	//t1.angle += 1;
 	t1.svg_t1k.style.transform = `translate(${t1.x}px, ${t1.y}px)rotate(${t1.k_angle}deg)`;
-	//                                                           |смещение башни по y| |центр вращения башни 15px, 15px|
-	t1.svg_t1b.style.transform = `translate(${t1.x}px, ${t1.y}px) translate(20px, 10px) translate(15px, 15px) rotate(${t1.k_angle + t1.b_angle}deg) translate(-15px, -15px)`;
+	//                                                              |смещение башни по y| |центр вращения башни 15px, 15px|
+	//t1.svg_t1b.style.transform = `translate(${t1.x}px, ${t1.y}px) translate(20px, 10px) translate(15px, 15px) rotate(${t1.k_angle + t1.b_angle}deg) translate(-15px, -15px)`;
+	//                                                          |центр вращения башни 15px, 15px|
+	t1.svg_t1b.style.transform = `translate(${t1.x}px, ${t1.y}px) translate(15px, 15px) rotate(${t1.k_angle + t1.b_angle}deg) translate(-15px, -15px)`;
   });
 
   requestAnimationFrame(updateAnts);
