@@ -110,11 +110,15 @@ function cloneBomb(){
 	bombSVG.style.transformOrigin = 'center center';
 	document.body.appendChild(bombSVG);
 
+	let sumAngle = t1.k_angle + t1.b_angle;
+	let dx = Math.cos(sumAngle * Math.PI / 180) * 35; //35 - это длинна дула (от центра башни до конца дула). Чтобы снаряд появлялся на конце дула.
+	let dy = Math.sin(sumAngle * Math.PI / 180) * 35; //вниз - положительный угол, вверх - отрицательный. вправо = 0.
+
 	bombs.push({
 		svg: bombSVG,
-		x: t1.x + 30, //центр танка
-		y: t1.y + 20, //центр танка
-		angle: t1.k_angle + t1.b_angle,
+		x: t1.x + 30 + dx, //+30 - это центр танка
+		y: t1.y + 20 + dy, //+20 - центр танка
+		angle: sumAngle,
 		speed: 2,
 	});
 }
@@ -213,7 +217,7 @@ function updateAnts() {
 	//снаряды
 	const bombsToDelete = [];
 	bombs.forEach((bomb, index) => {
-		let dx = Math.cos(bomb.angle * Math.PI / 180) * bomb.speed;
+		let dx = Math.cos(bomb.angle * Math.PI / 180) * bomb.speed; //вниз - положительный угол, вверх - отрицательный. вправо = 0.
 		let dy = Math.sin(bomb.angle * Math.PI / 180) * bomb.speed;
 
 		bomb.x += dx;
