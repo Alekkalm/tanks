@@ -12,7 +12,8 @@ const t1 = {
 	b_angle: 0,
     speed: 0,
   };
-
+const bombs = [];
+const bombTemplate = document.getElementById('bomb'); // Находим шаблон
 
 
 //строка для получения SVG
@@ -68,6 +69,7 @@ let ArrowDown_pressed = false;
 let ArrowLeft_pressed = false;
 let ArrowRight_pressed = false;
 
+
 // Обработчик события нажатия клавиши
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
@@ -79,7 +81,9 @@ document.addEventListener('keydown', (event) => {
     case 'ArrowDown': ArrowDown_pressed = true; break; 
     case 'ArrowLeft': ArrowLeft_pressed = true; break;
     case 'ArrowRight': ArrowRight_pressed = true; break;
+	case 'Space': cloneBomb(); break;
   }
+  //console.log(event.code);
 });
 
 // Обработчик события отпускания клавиши
@@ -95,6 +99,23 @@ document.addEventListener('keyup', (event) => {
     case 'ArrowRight': ArrowRight_pressed = false; break;
   }
 });
+
+function cloneBomb(){
+	const bombSVG = bombTemplate.cloneNode(true); // Клонируем шаблон
+	bombSVG.removeAttribute('id'); // Убираем id, чтобы не было дубликатов
+	bombSVG.style.display = 'block'; // Делаем элемент видимым
+	bombSVG.style.transformOrigin = 'center center';
+	document.body.appendChild(bombSVG);
+
+	bombs.push({
+		svg: bombSVG,
+		x: t1.x,
+		y: t1.y,
+		angle: t1.k_angle + t1.b_angle,
+		speed: 2,
+	});
+}
+
 
 function updateAnts() {
   ants.forEach((ant, index) => {
@@ -145,42 +166,64 @@ function updateAnts() {
 
     let angle = ant.angle + 90; // Корректировка угла поворота
     ant.element.style.transform = `rotate(${angle}deg)`;
-	
+  });	
 	
 	//танки
 	//if(keyA_pressed) t1.x -= 0.1;
 	//if(keyD_pressed) t1.x += 0.1;
-	if(keyA_pressed) t1.b_angle -= 0.1;
-	if(keyD_pressed) t1.b_angle += 0.1;
+	if(keyA_pressed) t1.b_angle -= 1;
+	if(keyD_pressed) t1.b_angle += 1;
 	//if(keyW_pressed) t1.y -= 0.1;
 	//if(keyS_pressed) t1.y += 0.1;
-	if(ArrowLeft_pressed) t1.k_angle -= 0.1;
-	if(ArrowRight_pressed) t1.k_angle += 0.1;
+	if(ArrowLeft_pressed) t1.k_angle -= 1;
+	if(ArrowRight_pressed) t1.k_angle += 1;
 	t1.speed = 0;
 	if(ArrowUp_pressed){
-		t1.speed = 0.1;
+		t1.speed = 1;
 	}
 	if(ArrowDown_pressed){
-		t1.speed = -0.1;
+		t1.speed = -1;
 	}
+
 	
 	//повторно используем dx и dy теперь для танков
-	dx = Math.cos(t1.k_angle * Math.PI / 180) * t1.speed;
-    dy = Math.sin(t1.k_angle * Math.PI / 180) * t1.speed;
+	let dx = Math.cos(t1.k_angle * Math.PI / 180) * t1.speed;
+    let dy = Math.sin(t1.k_angle * Math.PI / 180) * t1.speed;
 	
 	t1.x += dx;
     t1.y += dy;
-	
-	//t1.x += 1;
-    //t1.y += 1;
-	//t1.angle += 1;
+
+
 	t1.svg_t1k.style.transform = `translate(${t1.x}px, ${t1.y}px)rotate(${t1.k_angle}deg)`;
-	//                                                              |смещение башни по y| |центр вращения башни 15px, 15px|
-	//t1.svg_t1b.style.transform = `translate(${t1.x}px, ${t1.y}px) translate(20px, 10px) translate(15px, 15px) rotate(${t1.k_angle + t1.b_angle}deg) translate(-15px, -15px)`;
 	//                                                          |центр вращения башни 15px, 15px|
 	t1.svg_t1b.style.transform = `translate(${t1.x}px, ${t1.y}px) translate(15px, 15px) rotate(${t1.k_angle + t1.b_angle}deg) translate(-15px, -15px)`;
-  });
 
+	//снаряды
+	const bombsToDelete = [];
+	bombs.forEach((bomb, index) => {
+		let dx = Math.cos(bomb.angle * Math.PI / 180) * bomb.speed;
+		let dy = Math.sin(bomb.angle * Math.PI / 180) * bomb.speed;
+
+		bomb.x += dx;
+		bomb.y += dy;
+
+		// Обработка столкновений с краями экрана
+		if (bomb.x < 0 || bomb.x > window.innerWidth || bomb.y < 0 || bomb.y > window.innerHeight) {
+			bombsToDelete.push(bomb);
+		//  bomb.angle += 180; // Разворот
+		//  bomb.x = Math.max(0, Math.min(ant.x, window.innerWidth));
+		//  bomb.y = Math.max(0, Math.min(ant.y, window.innerHeight));
+		}
+		bomb.svg.style.transform = `translate(${bomb.x}px, ${bomb.y}px)`;
+	});
+
+	bombsToDelete.forEach((bombToDelete, index) => {
+		//if (bombToDelete.svg) {
+            bombToDelete.svg.remove(); // Удаляем SVG из DOM
+        //}
+		bombs.splice(bombs.indexOf(bombToDelete), 1); // Удаляем первое вхождение элемента 
+	});
+	
   requestAnimationFrame(updateAnts);
 }
 
