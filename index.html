@@ -15,22 +15,6 @@
 			<path id="mr" d="M5.81 8.77c-.24.08-.1.04-.26.26-.17-.16-.24-.29-.49-.3l.44-.36c1.46.08 2.47-1.1 2.89.95.22 1.08-.31.98.63 1.56.31.19.3.24.55.49l.27.25c.23.24.15.11.28.4-.37-.07-.98-.69-1.27-.98-.17-.18-.26-.19-.44-.34-.44-.39-.22-.61-.37-1.12-.06-.2-.34-.9-.46-1.02-.07-.01-1.77.21-1.77.21z"/>
 		  </g>
 		</svg>
-<!-- 
-<svg id="t1k" xmlns="http://www.w3.org/2000/svg" width="70" height="50" style="position: absolute; left: 0; top: 0;">
-	<rect x="0" y="10" width="70" height="30" fill="darkgreen" stroke="black"/> <!-- Основной прямоугольник (верхний левый угол, ширина и высота)
-	<rect x="0" y="0" width="70" height="10" fill="darkgray" stroke="black"/> <!-- Верхний гусеница 
-	<rect x="0" y="40" width="70" height="10" fill="darkgray" stroke="black"/> <!-- Нижний гусеница 
-	<polyline points="0.00 10.00 10.00 0.00 10.00 10.00 20.00 0.00 20.00 10.00 30.00 0.00 30.00 10.00 40.00 0.00 40.00 10.00 50.00 0.00 50.00 10.00 60.00 0.00 60.00 10.00 70.00 0.00" fill="none" stroke="rgb(0,0,0)" stroke-width="1" /> <!-- Верхняя зигзагообразная линия 
-	<polyline points="0.00 40.00 10.00 50.00 10.00 40.00 20.00 50.00 20.00 40.00 30.00 50.00 30.00 40.00 40.00 50.00 40.00 40.00 50.00 50.00 50.00 40.00 60.00 50.00 60.00 40.00 70.00 50.00" fill="none" stroke="rgb(0,0,0)" stroke-width="1" /> <!-- Нижняя зигзагообразная линия 
-</svg>
-<svg id="t1b" xmlns="http://www.w3.org/2000/svg" width="50" height="30" style="position: absolute; left: 0; top: 10px;"> <!-- все единицы по умолчанию - в пикселях. но можно и указать. (здесь если не указать, то улетает куда-то).
-	<rect x="20" y="0" width="30" height="30" fill="green" stroke="black"/> <!-- башня (верхний левый угол, ширина и высота)
-	<rect x="0" y="10" width="20" height="10" fill="black" stroke="black"/> <!-- дуло (верхний левый угол, ширина и высота)
-	<circle cx="30.00" cy="10.00" r="5.00" fill="rgb(0,0,0)" stroke="rgb(0,0,0)" stroke-width="1" /> <!-- люк 
-	<!-- центр башни: x=20+15(дуло + пол башни) y=15 (пол башни) 
-</svg>
--->
-
 		<svg id="t1k" xmlns="http://www.w3.org/2000/svg" width="70" height="50" style="position: absolute; left: 0; top: 0;">
 			<rect x="0" y="10" width="70" height="30" fill="darkgreen" stroke="black"/> <!-- Основной прямоугольник (верхний левый угол, ширина и высота)-->
 			<circle cx="60.00" cy="18.00" r="5.00" fill="none" stroke="rgb(0,0,0)" stroke-width="1"/> <!-- люк -->
@@ -42,15 +26,18 @@
 			<rect x="0" y="40" width="70" height="10" fill="darkgray" stroke="black"/> <!-- Нижний гусеница -->
 			<polyline points="0.00 10.00 10.00 0.00 10.00 10.00 20.00 0.00 20.00 10.00 30.00 0.00 30.00 10.00 40.00 0.00 40.00 10.00 50.00 0.00 50.00 10.00 60.00 0.00 60.00 10.00 70.00 0.00" fill="none" stroke="rgb(0,0,0)" stroke-width="1" /> <!-- Верхняя зигзагообразная линия -->
 			<polyline points="0.00 40.00 10.00 50.00 10.00 40.00 20.00 50.00 20.00 40.00 30.00 50.00 30.00 40.00 40.00 50.00 40.00 40.00 50.00 50.00 50.00 40.00 60.00 50.00 60.00 40.00 70.00 50.00" fill="none" stroke="rgb(0,0,0)" stroke-width="1" /> <!-- Нижняя зигзагообразная линия -->
+			<text x="5" y="8" text-anchor="middle" fill="white" font-size="8">0</text>
 		</svg>
 		<svg id="t1b" xmlns="http://www.w3.org/2000/svg" width="50" height="30" style="position: absolute; left: 20px; top: 10px;"> <!-- все единицы по умолчанию - в пикселях. но можно и указать. (здесь если не указать, то улетает куда-то).-->
 			<rect x="0" y="0" width="30" height="30" fill="green" stroke="black"/> <!-- башня (верхний левый угол, ширина и высота)-->
 			<rect x="30" y="10" width="20" height="10" fill="black" stroke="black"/> <!-- дуло (верхний левый угол, ширина и высота)-->
 			<circle cx="20.00" cy="20.00" r="5.00" fill="rgb(0,0,0)" stroke="rgb(0,0,0)" stroke-width="1"/> <!-- люк -->
 			<!-- центр башни: x=15 (пол башни) y=15 (пол башни) -->
+			<text x="5" y="8" text-anchor="middle" fill="white" font-size="8">0</text>
 		</svg>
 		<svg id="bomb" xmlns="http://www.w3.org/2000/svg" width="10" height="10" style="position: absolute; left: 0px; top: 0px; display: none;"> <!-- не показывать -->
 			<circle cx="5.00" cy="5.00" r="5.00" fill="rgb(0,0,0)" stroke="rgb(0,0,0)" stroke-width="1"/> <!-- снаряд -->
+			<text class="bomb_id_text" x="5" y="8" text-anchor="middle" fill="white" font-size="8">0</text>
 		</svg>
 		<script src="scripts/script.js"></script>
 	</body>
