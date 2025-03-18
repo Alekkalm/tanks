@@ -14,6 +14,7 @@ const t1 = {
   };
 const bombs = [];
 const bombTemplate = document.getElementById('bomb'); // Находим шаблон
+let bombLastFreeN = 0;
 
 
 //строка для получения SVG
@@ -133,6 +134,9 @@ function cloneBomb(){
 	bombSVG.removeAttribute('id'); // Убираем id, чтобы не было дубликатов
 	bombSVG.style.display = 'block'; // Делаем элемент видимым
 	bombSVG.style.transformOrigin = 'center center';
+	const bombIdText = bombSVG.querySelector('.bomb_id_text');//ищем по названию класса
+	bombIdText.textContent = bombLastFreeN;
+	bombLastFreeN +=1;
 	document.body.appendChild(bombSVG);
 
 	let sumAngle = t1.k_angle + t1.b_angle;
