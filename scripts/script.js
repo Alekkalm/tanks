@@ -1,3 +1,9 @@
+//FPS
+let lastTime = performance.now(); // Время последнего кадра
+let frameCount = 0; // Счётчик кадров
+let fps = 0; // Текущее значение FPS
+const fpsDisplay = document.getElementById('fpsDisplay');
+
 //получаем первый танк
 const svg_t1k = document.getElementById('t1k'); 
 const svg_t1b = document.getElementById('t1b');
@@ -185,6 +191,24 @@ function updateAnts() {
 	updateFunctionIsBusy = true; //ставим признак что функция еще работает
 	frameN += 1;//счетчик кадров отрисованых
 	frameNText.textContent = `кадр: ${frameN}`;
+	
+	//FPS
+	//-----------
+	const now = performance.now(); // Текущее время
+	const delta = now - lastTime; // Время, прошедшее с последнего кадра
+
+	frameCount++; // Увеличиваем счётчик кадров
+
+	// Если прошла секунда, обновляем FPS
+	if (delta >= 1000) {
+		fps = frameCount; // FPS равно количеству кадров за последнюю секунду
+		frameCount = 0; // Сбрасываем счётчик кадров
+		lastTime = now; // Обновляем время последнего кадра
+	}
+	// Обновляем текст на экране
+    fpsDisplay.textContent = `FPS: ${fps}`;
+	//-------
+
 	
 	
 	//муравьи
