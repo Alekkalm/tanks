@@ -15,7 +15,16 @@ const t1 = {
 const bombs = [];
 const bombTemplate = document.getElementById('bomb'); // Находим шаблон
 let bombLastFreeN = 0;
+const bombLastNText = document.getElementById('bombLastN');
 
+let frameDropN = 0;
+let updateFunctionIsBusy = false;
+const frameDropNText = document.getElementById('frameDropN'); 
+//frameDropNText.textContent = `пропущено кадров: ${frameDropN}`;
+let frameN = 0;
+const frameNText = document.getElementById('frameN'); 
+//frameNText.textContent = `кадр: ${frameN}`;
+ 
 
 //строка для получения SVG
 const antTemplate = document.getElementById('ant-template'); // Находим шаблон
@@ -136,6 +145,7 @@ function cloneBomb(){
 	bombSVG.style.transformOrigin = 'center center';
 	const bombIdText = bombSVG.querySelector('.bomb_id_text');//ищем по названию класса
 	bombIdText.textContent = bombLastFreeN;
+	bombLastNText.textContent = `последний выпущеный снаряд номер: ${bombLastFreeN}`;
 	bombLastFreeN +=1;
 	document.body.appendChild(bombSVG);
 
@@ -167,6 +177,16 @@ function collision(a, b){
 }
 
 function updateAnts() {
+	
+	if(updateFunctionIsBusy){ //если функция работает, а мы её еще раз вызвали, то выходим. (проверка, вдруг не успевает выполниться за один кадр а уже пора выполняться для следующего кадра).
+		frameDropN += 1; //количество пропущеных кадров (для отображения).
+		return;
+	}
+	updateFunctionIsBusy = true; //ставим признак что функция еще работает
+	frameN += 1;//счетчик кадров отрисованых
+	frameNText.textContent = `кадр: ${frameN}`;
+	
+	
 	//муравьи
   ants.forEach((ant, index) => {
     let dx = 0;
@@ -299,7 +319,10 @@ function updateAnts() {
 	//	ants.splice(ants.indexOf(antToDelete), 1); // Удаляем объект bomb из массива bombs
 	//});
 	
+	
+	frameDropNText.textContent = `пропущено кадров: ${frameDropN}`;
   requestAnimationFrame(updateAnts);
+  updateFunctionIsBusy = false; //сбрасываем признак что функция работает
 }
 
 updateAnts();
