@@ -1,8 +1,11 @@
 //FPS
+let lastTimeOneSec = performance.now(); // Время последнего кадра
 let lastTime = performance.now(); // Время последнего кадра
 let frameCount = 0; // Счётчик кадров
 let fps = 0; // Текущее значение FPS
 const fpsDisplay = document.getElementById('fpsDisplay');
+const fpsDT = document.getElementById('fpsDT');
+const codeDT = document.getElementById('codeDT');
 
 //получаем первый танк
 const svg_t1k = document.getElementById('t1k'); 
@@ -191,20 +194,25 @@ function updateAnts() {
 	}
 	updateFunctionIsBusy = true; //ставим признак что функция еще работает
 	frameN += 1;//счетчик кадров отрисованых
+	let lastTimeCode = performance.now();
 	frameNText.textContent = `кадр: ${frameN}`;
 	
 	//FPS
 	//-----------
 	const now = performance.now(); // Текущее время
+	const OneSecDelta = now - lastTimeOneSec; // Время, прошедшее с последнего кадра
+	
 	const delta = now - lastTime; // Время, прошедшее с последнего кадра
-
+	fpsDT.textContent = `FPS дельта Т: ${delta}`;
+	lastTime = now; 
+	
 	frameCount++; // Увеличиваем счётчик кадров
 
 	// Если прошла секунда, обновляем FPS
-	if (delta >= 1000) {
+	if (OneSecDelta >= 1000) {
 		fps = frameCount; // FPS равно количеству кадров за последнюю секунду
 		frameCount = 0; // Сбрасываем счётчик кадров
-		lastTime = now; // Обновляем время последнего кадра
+		lastTimeOneSec = now; // Обновляем время последнего кадра
 	}
 	// Обновляем текст на экране
     fpsDisplay.textContent = `FPS: ${fps}`;
@@ -346,6 +354,7 @@ function updateAnts() {
 	
 	bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${bombs.length}`;
 	frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
+	codeDT.textContent = `код дельта Т: ${performance.now() - lastTimeCode}`;
   requestAnimationFrame(updateAnts);
   updateFunctionIsBusy = false; //сбрасываем признак что функция работает
 }
