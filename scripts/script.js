@@ -22,6 +22,7 @@ const bombs = [];
 const bombTemplate = document.getElementById('bomb'); // Находим шаблон
 let bombLastFreeN = 0;
 const bombLastNText = document.getElementById('bombLastN');
+const bombsOnDisplayNText = document.getElementById('bombsOnDisplayN');
 
 let frameDropN = 0;
 let updateFunctionIsBusy = false;
@@ -343,8 +344,8 @@ function updateAnts() {
 	//	ants.splice(ants.indexOf(antToDelete), 1); // Удаляем объект bomb из массива bombs
 	//});
 	
-	
-	frameDropNText.textContent = `пропущено кадров: ${frameDropN}`;
+	bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${bombs.length}`;
+	frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
   requestAnimationFrame(updateAnts);
   updateFunctionIsBusy = false; //сбрасываем признак что функция работает
 }
