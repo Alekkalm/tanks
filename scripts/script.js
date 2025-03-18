@@ -336,7 +336,7 @@ function updateAnts() {
 			if (collision(bombRect, antRect)) { //размер снаряда 10 на 10.
 				//ant.element.style.fill = 'red';
 				ant.element.setAttribute('fill', 'red');
-				debugger
+				//debugger
 				antsToDelete.push(ant);
 				bombsToDelete.push(bomb);
 			}
