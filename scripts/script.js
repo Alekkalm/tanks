@@ -7,6 +7,23 @@ const fpsDisplay = document.getElementById('fpsDisplay');
 const fpsDT = document.getElementById('fpsDT');
 const codeDT = document.getElementById('codeDT');
 
+//дисплей отладочной информации
+let bombLastFreeN = 0;
+const bombLastNText = document.getElementById('bombLastN');
+const bombsOnDisplayNText = document.getElementById('bombsOnDisplayN');
+
+let frameDropN = 0;
+let updateFunctionIsBusy = false;
+const frameDropNText = document.getElementById('frameDropN'); 
+//frameDropNText.textContent = `пропущено кадров: ${frameDropN}`;
+let frameN = 0;
+const frameNText = document.getElementById('frameN'); 
+//frameNText.textContent = `кадр: ${frameN}`;
+ 
+
+
+
+
 
 
 
@@ -30,20 +47,31 @@ const t1 = {
 
 
   //снаряды
-const bombs = [];
+const BombsNum = 50;
+const bombsPool = [];
 const bombTemplate = document.getElementById('bomb'); // Находим шаблон
-let bombLastFreeN = 0;
-const bombLastNText = document.getElementById('bombLastN');
-const bombsOnDisplayNText = document.getElementById('bombsOnDisplayN');
+for (let i = 0; i < BombsNum; i++) {
+	
+	const bombSVG = bombTemplate.cloneNode(true); // Клонируем шаблон
+	bombSVG.removeAttribute('id'); // Убираем id, чтобы не было дубликатов
+	bombSVG.style.display = 'none'; // Делаем элемент видимым
+	bombSVG.style.transformOrigin = 'center center';
+	const bombIdText = bombSVG.querySelector('.bomb_id_text');//ищем по названию класса
+	bombIdText.textContent = i;
+	document.body.appendChild(bombSVG);
+  
+	bombsPool.push({
+	  svg: bombSVG,
+	  x: i * 10,
+	  y: 10,
+	  angle: 0,
+	  speed: 0,
+	  busy: false, //занят или свободен
+	});
+  }
 
-let frameDropN = 0;
-let updateFunctionIsBusy = false;
-const frameDropNText = document.getElementById('frameDropN'); 
-//frameDropNText.textContent = `пропущено кадров: ${frameDropN}`;
-let frameN = 0;
-const frameNText = document.getElementById('frameN'); 
-//frameNText.textContent = `кадр: ${frameN}`;
- 
+
+
 
 
 
@@ -52,15 +80,39 @@ const frameNText = document.getElementById('frameN');
 //строка для получения SVG
 const antTemplate = document.getElementById('ant-template'); // Находим шаблон
 
-let mousex = -1000;
-let mousey = -1000;
 const ants = [];
 const numAnts = 50;
 const antSize = 20; 
 const avoidRadius = 25; 
 const followRadius = 150; 
 
-//отладка. получаем размеры
+for (let i = 0; i < numAnts; i++) {
+	
+	const antElem = antTemplate.cloneNode(true); // Клонируем шаблон
+	antElem.removeAttribute('id'); // Убираем id, чтобы не было дубликатов
+	antElem.style.display = 'block'; // Делаем элемент видимым
+	
+	antElem.style.position = 'absolute';
+	antElem.setAttribute('width', `${antSize}px`);  
+	antElem.setAttribute('height', `${(antSize * 73 / 46)}px`); // Сохранение пропорций
+	antElem.style.transformOrigin = 'center center';
+	document.body.appendChild(antElem);
+  
+	ants.push({
+	  element: antElem,
+	  x: Math.random() * (window.innerWidth - antSize),
+	  y: Math.random() * (window.innerHeight - (antSize * 73 / 46)),
+	  angle: Math.random() * 360,
+	  speed: 1 + Math.random() * 2,
+	  followMouse: false,
+	});
+  }
+
+
+
+
+//--------------------------------------------------------
+//отладка. получаем размеры муравья
 antTemplate.style.transform = `translate(${500}px, ${300}px) rotate(${45}deg)`;
 
 const antWidth = antTemplate.getAttribute('width') //получаем размеры SVG. похоже что тоже без учета трансформации. (на rotate не реагирует).
@@ -84,28 +136,10 @@ const rect = antTemplate.getBoundingClientRect();
 console.log(rect); // { x, y, width, height, top, right, bottom, left }
 //получаем размер новой коробки, которая увеличилась из-за поворота муравья.
 //отладка. конец.
+//-----------------------------------------------------------
 
-for (let i = 0; i < numAnts; i++) {
-	
-  const antElem = antTemplate.cloneNode(true); // Клонируем шаблон
-  antElem.removeAttribute('id'); // Убираем id, чтобы не было дубликатов
-  antElem.style.display = 'block'; // Делаем элемент видимым
-  
-  antElem.style.position = 'absolute';
-  antElem.setAttribute('width', `${antSize}px`);  
-  antElem.setAttribute('height', `${(antSize * 73 / 46)}px`); // Сохранение пропорций
-  antElem.style.transformOrigin = 'center center';
-  document.body.appendChild(antElem);
 
-  ants.push({
-    element: antElem,
-    x: Math.random() * (window.innerWidth - antSize),
-    y: Math.random() * (window.innerHeight - (antSize * 73 / 46)),
-    angle: Math.random() * 360,
-    speed: 1 + Math.random() * 2,
-    followMouse: false,
-  });
-}
+
 
 
 
@@ -115,6 +149,10 @@ for (let i = 0; i < numAnts; i++) {
 
 
 //обработчики мыши и клавиш
+let mousex = -1000;
+let mousey = -1000;
+
+
 document.addEventListener('mousemove', (event) => {
   mousex = event.clientX;
   mousey = event.clientY;
@@ -206,7 +244,21 @@ function cloneBomb(){
 	});
 }
 
+function shot(){
+	const bomb = bombsPool.find((bomb) => bomb.busy === false);
+	if(bomb !== undefined){
+		let sumAngle = t1.k_angle + t1.b_angle;
+		let dx = Math.cos(sumAngle * Math.PI / 180) * 35; //35 - это длинна дула (от центра башни до конца дула). Чтобы снаряд появлялся на конце дула.
+		let dy = Math.sin(sumAngle * Math.PI / 180) * 35; //вниз - положительный угол, вверх - отрицательный. вправо = 0.
 
+		bomb.x = t1.x + 30 + dx; //+30 - это центр танка
+		bomb.y = t1.y + 20 + dy; //+20 - центр танка
+		bomb.angle = sumAngle;//bombAngle,
+		bomb.speed = 2;
+		bomb.busy = true;
+		bomb.svg.style.display = 'block'; // Делаем элемент видимым
+	}
+}
 
 
 
@@ -327,7 +379,7 @@ function updateAnts() {
 
 
 
-  
+
 	//танки
 	//if(keyA_pressed) t1.x -= 0.1;
 	//if(keyD_pressed) t1.x += 0.1;
@@ -349,7 +401,8 @@ function updateAnts() {
 	Space_pressed_previous = Space_pressed;
 	//выстрел
 	if(Space_pressed){
-		cloneBomb();
+		//cloneBomb();
+		shot();
 	}
 	
 	
@@ -369,7 +422,8 @@ function updateAnts() {
 	//снаряды
 	const bombsToDelete = [];
 	const antsToDelete = [];
-	bombs.forEach((bomb, index) => {
+	const busyBombs = bombsPool.filter((bomb) => bomb.busy === true);
+	busyBombs.forEach((bomb, index) => {
 		let dx = Math.cos(bomb.angle * Math.PI / 180) * bomb.speed; //вниз - положительный угол, вверх - отрицательный. вправо = 0.
 		let dy = Math.sin(bomb.angle * Math.PI / 180) * bomb.speed;
 
@@ -403,15 +457,17 @@ function updateAnts() {
 	});
 
 	bombsToDelete.forEach((bombToDelete, index) => {
-        bombToDelete.svg.remove(); // Удаляем SVG из DOM
-		bombs.splice(bombs.indexOf(bombToDelete), 1); // Удаляем объект bomb из массива bombs
+        //bombToDelete.svg.remove(); // Удаляем SVG из DOM
+		//bombs.splice(bombs.indexOf(bombToDelete), 1); // Удаляем объект bomb из массива bombs
+		bombToDelete.svg.style.display = 'none'; // Делаем элемент невидимым
+		bombToDelete.busy = false;
 	});
 	//antsToDelete.forEach((antToDelete, index) => {
     //    antToDelete.element.remove(); // Удаляем SVG из DOM
 	//	ants.splice(ants.indexOf(antToDelete), 1); // Удаляем объект bomb из массива bombs
 	//});
 	
-	bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${bombs.length}`;
+	bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${bombsPool.filter((bomb) => bomb.busy === true).length}`;
 	frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
 	codeDT.textContent = `код дельта Т: ${performance.now() - lastTimeCode}`;
   requestAnimationFrame(updateAnts);
