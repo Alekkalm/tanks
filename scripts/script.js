@@ -7,6 +7,10 @@ const fpsDisplay = document.getElementById('fpsDisplay');
 const fpsDT = document.getElementById('fpsDT');
 const codeDT = document.getElementById('codeDT');
 
+
+
+
+//танки
 //получаем первый танк
 const svg_t1k = document.getElementById('t1k'); 
 const svg_t1b = document.getElementById('t1b');
@@ -21,6 +25,11 @@ const t1 = {
 	b_angle: 0, //0 = влево
     speed: 0,
   };
+
+
+
+
+  //снаряды
 const bombs = [];
 const bombTemplate = document.getElementById('bomb'); // Находим шаблон
 let bombLastFreeN = 0;
@@ -36,6 +45,10 @@ const frameNText = document.getElementById('frameN');
 //frameNText.textContent = `кадр: ${frameN}`;
  
 
+
+
+
+//муравьи
 //строка для получения SVG
 const antTemplate = document.getElementById('ant-template'); // Находим шаблон
 
@@ -94,6 +107,14 @@ for (let i = 0; i < numAnts; i++) {
   });
 }
 
+
+
+
+
+
+
+
+//обработчики мыши и клавиш
 document.addEventListener('mousemove', (event) => {
   mousex = event.clientX;
   mousey = event.clientY;
@@ -148,6 +169,16 @@ document.addEventListener('keyup', (event) => {
   }
 });
 
+
+
+
+
+
+
+
+
+
+//клонирование снарядов
 function cloneBomb(){
 	const bombSVG = bombTemplate.cloneNode(true); // Клонируем шаблон
 	bombSVG.removeAttribute('id'); // Убираем id, чтобы не было дубликатов
@@ -175,6 +206,12 @@ function cloneBomb(){
 	});
 }
 
+
+
+
+
+
+
 function collision(a, b){
 	const a_CenterX = a.x + a.width/2;
 	const a_CenterY = a.y + a.height/2;
@@ -185,6 +222,14 @@ function collision(a, b){
 	const b_diametr = (b.width + b.height)/2; //диаметр - среднее между шириной и высотой.
 	return dist < (a_diametr + b_diametr)/2;
 }
+
+
+
+
+
+
+
+
 
 function updateAnts() {
 	
@@ -220,6 +265,9 @@ function updateAnts() {
 
 	
 	
+
+
+
 	//муравьи
   ants.forEach((ant, index) => {
     let dx = 0;
@@ -271,6 +319,15 @@ function updateAnts() {
     ant.element.style.transform = `rotate(${angle}deg)`;
   });	
 	
+
+
+
+
+
+
+
+
+  
 	//танки
 	//if(keyA_pressed) t1.x -= 0.1;
 	//if(keyD_pressed) t1.x += 0.1;
