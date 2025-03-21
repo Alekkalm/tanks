@@ -213,37 +213,6 @@ document.addEventListener('keyup', (event) => {
 
 
 
-
-
-
-//клонирование снарядов
-function cloneBomb(){
-	const bombSVG = bombTemplate.cloneNode(true); // Клонируем шаблон
-	bombSVG.removeAttribute('id'); // Убираем id, чтобы не было дубликатов
-	bombSVG.style.display = 'block'; // Делаем элемент видимым
-	bombSVG.style.transformOrigin = 'center center';
-	const bombIdText = bombSVG.querySelector('.bomb_id_text');//ищем по названию класса
-	bombIdText.textContent = bombLastFreeN;
-	// bombLastNText.textContent = `последний выпущеный снаряд номер: ${bombLastFreeN}`;
-	// bombLastFreeN +=1;
-	document.body.appendChild(bombSVG);
-
-	let sumAngle = t1.k_angle + t1.b_angle;
-	let dx = Math.cos(sumAngle * Math.PI / 180) * 35; //35 - это длинна дула (от центра башни до конца дула). Чтобы снаряд появлялся на конце дула.
-	let dy = Math.sin(sumAngle * Math.PI / 180) * 35; //вниз - положительный угол, вверх - отрицательный. вправо = 0.
-
-	//let maxAngle = Math.max(sumAngle, t1.k_angle); 
-	//let minAngle = Math.min(sumAngle, t1.k_angle);
-	//let bombAngle = minAngle + (maxAngle - minAngle)/2; 
-	bombs.push({
-		svg: bombSVG,
-		x: t1.x + 30 + dx, //+30 - это центр танка
-		y: t1.y + 20 + dy, //+20 - центр танка
-		angle: sumAngle,//bombAngle,
-		speed: 2,
-	});
-}
-
 function shot(){
 	const bomb = bombsPool.find((bomb) => bomb.busy === false);
 	if(bomb !== undefined){
