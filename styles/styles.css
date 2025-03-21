@@ -1,6 +1,7 @@
 
 body {
   overflow: hidden;/*не позволяет появлятся скролл-бару, если муравьи подошли к краю окна*/
+  font-family: "Unbounded","TT NORMS PRO","Trebuchet MS",sans-serif;
 }
 
 
