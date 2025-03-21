@@ -6,6 +6,10 @@ let fps = 0; // Текущее значение FPS
 const fpsDisplay = document.getElementById('fpsDisplay');
 const fpsDT = document.getElementById('fpsDT');
 const codeDT = document.getElementById('codeDT');
+let fpsMaxDelta = 0;
+let codeMaxDelta = 0;
+const fpsMaxDT = document.getElementById('fpsMaxDT');
+const codeMaxDT = document.getElementById('codeMaxDT');
 
 //дисплей отладочной информации
 const bombsOnDisplayNText = document.getElementById('bombsOnDisplayN');
@@ -266,6 +270,12 @@ function updateAnts() {
 	
 	const delta = now - lastTime; // Время, прошедшее с последнего кадра
 	fpsDT.textContent = `FPS дельта Т: ${delta}`;
+	if(fpsMaxDelta < delta) {
+		fpsMaxDelta = delta;
+		fpsMaxDT.textContent = `FPS макс.дельта Т: ${fpsMaxDelta}`;
+	}
+
+
 	lastTime = now; 
 	
 	frameCount++; // Увеличиваем счётчик кадров
@@ -425,7 +435,12 @@ function updateAnts() {
 	
 	bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${bombsPool.filter((bomb) => bomb.busy === true).length}`;
 	frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
-	codeDT.textContent = `код дельта Т: ${performance.now() - lastTimeCode}`;
+	const codeDelta = performance.now() - lastTimeCode;
+	codeDT.textContent = `код дельта Т: ${codeDelta}`;
+	if(codeMaxDelta < codeDelta){
+		codeMaxDelta = codeDelta;
+		codeMaxDT.textContent = `код макс.дельта Т: ${codeMaxDelta}`;
+	}
   requestAnimationFrame(updateAnts);
   updateFunctionIsBusy = false; //сбрасываем признак что функция работает
 }
