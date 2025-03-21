@@ -175,6 +175,7 @@ let ArrowRight_pressed = false;
 let Space_pressed = false;
 let Space_pressed_previous = false;
 let Space_pressed_front = false;
+let keyR_pressed = false;
 
 // Обработчик события нажатия клавиши
 document.addEventListener('keydown', (event) => {
@@ -188,6 +189,7 @@ document.addEventListener('keydown', (event) => {
     case 'ArrowLeft': ArrowLeft_pressed = true; break;
     case 'ArrowRight': ArrowRight_pressed = true; break;
 	case 'Space': Space_pressed = true; break;
+	case 'KeyR': keyR_pressed = true; break; 
   }
   //console.log(event.code);
 });
@@ -204,6 +206,7 @@ document.addEventListener('keyup', (event) => {
     case 'ArrowLeft': ArrowLeft_pressed = false; break;
     case 'ArrowRight': ArrowRight_pressed = false; break;
 	case 'Space': Space_pressed = false; break;
+	case 'KeyR': keyR_pressed = false; break; 
   }
 });
 
@@ -288,6 +291,12 @@ function updateAnts() {
 	}
 	// Обновляем текст на экране
     fpsDisplay.textContent = `FPS: ${fps}`;
+
+	//если нажата клавиша R, то сбрасываем показания макс.дельта Т.
+	if(keyR_pressed){
+		fpsMaxDelta = 0;
+ 		codeMaxDelta = 0;
+	}
 	//-------
 
 	
