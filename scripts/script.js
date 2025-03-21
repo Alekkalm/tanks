@@ -8,17 +8,13 @@ const fpsDT = document.getElementById('fpsDT');
 const codeDT = document.getElementById('codeDT');
 
 //дисплей отладочной информации
-let bombLastFreeN = 0;
-// const bombLastNText = document.getElementById('bombLastN');
 const bombsOnDisplayNText = document.getElementById('bombsOnDisplayN');
-
 let frameDropN = 0;
 let updateFunctionIsBusy = false;
 const frameDropNText = document.getElementById('frameDropN'); 
-//frameDropNText.textContent = `пропущено кадров: ${frameDropN}`;
 let frameN = 0;
 const frameNText = document.getElementById('frameN'); 
-//frameNText.textContent = `кадр: ${frameN}`;
+
  
 
 
@@ -402,9 +398,6 @@ function updateAnts() {
 		// Обработка столкновений с краями экрана
 		if (bomb.x < 0 || bomb.x > window.innerWidth - 10 || bomb.y < 0 || bomb.y > window.innerHeight - 10) { //размер снаряда 10 на 10.
 			bombsToDelete.push(bomb);
-		//  bomb.angle += 180; // Разворот
-		//  bomb.x = Math.max(0, Math.min(ant.x, window.innerWidth));
-		//  bomb.y = Math.max(0, Math.min(ant.y, window.innerHeight));
 		}
 		bomb.svg.style.transform = `translate(${bomb.x}px, ${bomb.y}px)`;
 		
@@ -426,15 +419,9 @@ function updateAnts() {
 	});
 
 	bombsToDelete.forEach((bombToDelete, index) => {
-        //bombToDelete.svg.remove(); // Удаляем SVG из DOM
-		//bombs.splice(bombs.indexOf(bombToDelete), 1); // Удаляем объект bomb из массива bombs
 		bombToDelete.svg.style.display = 'none'; // Делаем элемент невидимым
 		bombToDelete.busy = false;
 	});
-	//antsToDelete.forEach((antToDelete, index) => {
-    //    antToDelete.element.remove(); // Удаляем SVG из DOM
-	//	ants.splice(ants.indexOf(antToDelete), 1); // Удаляем объект bomb из массива bombs
-	//});
 	
 	bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${bombsPool.filter((bomb) => bomb.busy === true).length}`;
 	frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
