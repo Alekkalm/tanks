@@ -9,7 +9,7 @@ const codeDT = document.getElementById('codeDT');
 
 //дисплей отладочной информации
 let bombLastFreeN = 0;
-const bombLastNText = document.getElementById('bombLastN');
+// const bombLastNText = document.getElementById('bombLastN');
 const bombsOnDisplayNText = document.getElementById('bombsOnDisplayN');
 
 let frameDropN = 0;
@@ -224,8 +224,8 @@ function cloneBomb(){
 	bombSVG.style.transformOrigin = 'center center';
 	const bombIdText = bombSVG.querySelector('.bomb_id_text');//ищем по названию класса
 	bombIdText.textContent = bombLastFreeN;
-	bombLastNText.textContent = `последний выпущеный снаряд номер: ${bombLastFreeN}`;
-	bombLastFreeN +=1;
+	// bombLastNText.textContent = `последний выпущеный снаряд номер: ${bombLastFreeN}`;
+	// bombLastFreeN +=1;
 	document.body.appendChild(bombSVG);
 
 	let sumAngle = t1.k_angle + t1.b_angle;
