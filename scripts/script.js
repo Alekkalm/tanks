@@ -67,7 +67,8 @@ for (let i = 0; i < BombsNum; i++) {
 	  y: 0, 
 	  angle: 0,
 	  speed: 0,
-	  busy: false, //занят или свободен
+	  flying: false, //занят или свободен
+	  
 	});
   }
 
@@ -218,7 +219,7 @@ document.addEventListener('keyup', (event) => {
 
 
 function shot(){
-	const bomb = bombsPool.find((bomb) => bomb.busy === false);
+	const bomb = bombsPool.find((bomb) => bomb.flying === false);
 	if(bomb !== undefined){
 		let sumAngle = t1.k_angle + t1.b_angle;
 		let dx = Math.cos(sumAngle * Math.PI / 180) * 35; //35 - это длинна дула (от центра башни до конца дула). Чтобы снаряд появлялся на конце дула.
@@ -228,7 +229,7 @@ function shot(){
 		bomb.y = t1.y + 20 + dy; //+20 - центр танка
 		bomb.angle = sumAngle;//bombAngle,
 		bomb.speed = 2;
-		bomb.busy = true;
+		bomb.flying = true;
 		//bomb.svg.style.display = 'block'; // Делаем элемент видимым
 		const bombCircle = bomb.svg.querySelector('.bomb');//ищем по названию класса
 		const bombText = bomb.svg.querySelector('.bomb_id_text');//ищем по названию класса
@@ -449,8 +450,8 @@ function updateAnts() {
 	//снаряды
 	const bombsToDelete = [];
 	const antsToDelete = [];
-	const busyBombs = bombsPool.filter((bomb) => bomb.busy === true);
-	busyBombs.forEach((bomb, index) => {
+	const flyingBombs = bombsPool.filter((bomb) => bomb.flying === true);
+	flyingBombs.forEach((bomb, index) => {
 		let dx = Math.cos(bomb.angle * Math.PI / 180) * bomb.speed; //вниз - положительный угол, вверх - отрицательный. вправо = 0.
 		let dy = Math.sin(bomb.angle * Math.PI / 180) * bomb.speed;
 
@@ -485,12 +486,12 @@ function updateAnts() {
 		triggerExplosion(bombToDelete);
 		//bombToDelete.x = -100;
 		bombToDelete.speed = 0;
-		bombToDelete.busy = false;
+		bombToDelete.flying = false;
 		bombToDelete.svg.style.transform = `translate(${bomb.x}px, ${bomb.y}px)`;//прячем за пределы экрана
 	});
 	
 	
-	bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${bombsPool.filter((bomb) => bomb.busy === true).length}`;
+	bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${bombsPool.filter((bomb) => bomb.flying === true).length}`;
 	frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
 	const codeDelta = performance.now() - lastTimeCode;
 	codeDT.textContent = `код дельта Т: ${codeDelta}`;
