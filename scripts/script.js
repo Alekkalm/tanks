@@ -250,7 +250,17 @@ function collision(a, b){
 
 
 
-
+function triggerExplosion(element) {
+	element.animate([
+	  { transform: 'scale(1)', opacity: 1 },
+	  { transform: 'scale(1.5)', opacity: 0.8, filter: 'brightness(2)' },
+	  { transform: 'scale(0.5)', opacity: 0, filter: 'brightness(5)' }
+	], {
+	  duration: 1000,
+	  easing: 'ease-out',
+	  fill: 'forwards'
+	});
+  }
 
 
 
