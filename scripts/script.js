@@ -251,7 +251,10 @@ function collision(a, b){
 
 
 function triggerExplosion(element) {
-	element.animate([
+	const bomb = element.svg.querySelector('.bomb');//ищем по названию класса
+	const bombText = element.svg.querySelector('.bomb_id_text');//ищем по названию класса
+	const explosion = element.svg.querySelector('.explosion');//ищем по названию класса
+	const animation = explosion.animate([
 	  { transform: 'scale(1)', opacity: 1 },
 	  { transform: 'scale(1.5)', opacity: 0.8, filter: 'brightness(2)' },
 	  { transform: 'scale(0.5)', opacity: 0, filter: 'brightness(5)' }
@@ -260,10 +263,25 @@ function triggerExplosion(element) {
 	  easing: 'ease-out',
 	  fill: 'forwards'
 	});
+	bomb.style.opacity = 0;
+	bombText.style.opacity = 0;
+
+
+	animation.finished.then(() => {
+		freeBomb(element); //освобождаем снаряд
+	  });
   }
 
 
-
+function freeBomb(element){
+	const bomb = element.svg.querySelector('.bomb');//ищем по названию класса
+	const bombText = element.svg.querySelector('.bomb_id_text');//ищем по названию класса
+	//const explosion = element.svg.querySelector('.explosion');//ищем по названию класса
+	bomb.style.opacity = 1;
+	bombText.style.opacity = 1;
+	element.x = -100;
+	element.svg.style.transform = `translate(${element.x}px, ${element.y}px)`;//прячем за пределы экрана
+}
 
 
 function updateAnts() {
@@ -450,7 +468,8 @@ function updateAnts() {
 
 	bombsToDelete.forEach((bombToDelete, index) => {
 		//bombToDelete.svg.style.display = 'none'; // Делаем элемент невидимым
-		bombToDelete.x = -100;
+		triggerExplosion(bombToDelete);
+		//bombToDelete.x = -100;
 		bombToDelete.speed = 0;
 		bombToDelete.busy = false;
 		bombToDelete.svg.style.transform = `translate(${bomb.x}px, ${bomb.y}px)`;//прячем за пределы экрана
