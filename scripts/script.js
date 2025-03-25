@@ -230,6 +230,12 @@ function shot(){
 		bomb.speed = 2;
 		bomb.busy = true;
 		//bomb.svg.style.display = 'block'; // Делаем элемент видимым
+		const bombCircle = bomb.svg.querySelector('.bomb');//ищем по названию класса
+		const bombText = bomb.svg.querySelector('.bomb_id_text');//ищем по названию класса
+		//const explosion = bomb.svg.querySelector('.explosion');//ищем по названию класса
+		bombCircle.style.opacity = 1;
+		bombText.style.opacity = 1;
+		//explosion.style.opacity = 0;
 	}
 }
 
@@ -263,25 +269,33 @@ function triggerExplosion(element) {
 	  easing: 'ease-out',
 	  fill: 'forwards'
 	});
+
+	// const animation = explosion.animate([
+	// 	{ opacity: 1 },
+	//   ], {
+	// 	duration: 1000,
+	// 	fill: 'forwards'
+	//   });
+	//explosion.style.opacity = 1;
 	bomb.style.opacity = 0;
 	bombText.style.opacity = 0;
 
 
-	animation.finished.then(() => {
-		freeBomb(element); //освобождаем снаряд
-	  });
+	// animation.finished.then(() => {
+	// 	freeBomb(element); //освобождаем снаряд
+	//   });
   }
 
 
-function freeBomb(element){
-	const bomb = element.svg.querySelector('.bomb');//ищем по названию класса
-	const bombText = element.svg.querySelector('.bomb_id_text');//ищем по названию класса
-	//const explosion = element.svg.querySelector('.explosion');//ищем по названию класса
-	bomb.style.opacity = 1;
-	bombText.style.opacity = 1;
-	element.x = -100;
-	element.svg.style.transform = `translate(${element.x}px, ${element.y}px)`;//прячем за пределы экрана
-}
+// function freeBomb(element){
+// 	const bomb = element.svg.querySelector('.bomb');//ищем по названию класса
+// 	const bombText = element.svg.querySelector('.bomb_id_text');//ищем по названию класса
+// 	//const explosion = element.svg.querySelector('.explosion');//ищем по названию класса
+// 	bomb.style.opacity = 1;
+// 	bombText.style.opacity = 1;
+// 	element.x = -100;
+// 	element.svg.style.transform = `translate(${element.x}px, ${element.y}px)`;//прячем за пределы экрана
+// }
 
 
 function updateAnts() {
