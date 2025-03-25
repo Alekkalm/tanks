@@ -79,65 +79,65 @@ for (let i = 0; i < BombsNum; i++) {
 
 //муравьи
 //строка для получения SVG
-const antTemplate = document.getElementById('ant-template'); // Находим шаблон
+// const antTemplate = document.getElementById('ant-template'); // Находим шаблон
 
-const ants = [];
-const numAnts = 50;
-const antSize = 20; 
-const avoidRadius = 25; 
-const followRadius = 150; 
+// const ants = [];
+// const numAnts = 50;
+// const antSize = 20; 
+// const avoidRadius = 25; 
+// const followRadius = 150; 
 
-for (let i = 0; i < numAnts; i++) {
+// for (let i = 0; i < numAnts; i++) {
 	
-	const antElem = antTemplate.cloneNode(true); // Клонируем шаблон
-	antElem.removeAttribute('id'); // Убираем id, чтобы не было дубликатов
-	antElem.style.display = 'block'; // Делаем элемент видимым
+// 	const antElem = antTemplate.cloneNode(true); // Клонируем шаблон
+// 	antElem.removeAttribute('id'); // Убираем id, чтобы не было дубликатов
+// 	antElem.style.display = 'block'; // Делаем элемент видимым
 	
-	antElem.style.position = 'absolute';
-	antElem.setAttribute('width', `${antSize}px`);  
-	antElem.setAttribute('height', `${(antSize * 73 / 46)}px`); // Сохранение пропорций
-	antElem.style.transformOrigin = 'center center';
-	document.body.appendChild(antElem);
+// 	antElem.style.position = 'absolute';
+// 	antElem.setAttribute('width', `${antSize}px`);  
+// 	antElem.setAttribute('height', `${(antSize * 73 / 46)}px`); // Сохранение пропорций
+// 	antElem.style.transformOrigin = 'center center';
+// 	document.body.appendChild(antElem);
   
-	ants.push({
-	  element: antElem,
-	  x: Math.random() * (window.innerWidth - antSize),
-	  y: Math.random() * (window.innerHeight - (antSize * 73 / 46)),
-	  angle: Math.random() * 360,
-	  speed: 1 + Math.random() * 2,
-	  followMouse: false,
-	});
-  }
+// 	ants.push({
+// 	  element: antElem,
+// 	  x: Math.random() * (window.innerWidth - antSize),
+// 	  y: Math.random() * (window.innerHeight - (antSize * 73 / 46)),
+// 	  angle: Math.random() * 360,
+// 	  speed: 1 + Math.random() * 2,
+// 	  followMouse: false,
+// 	});
+//   }
 
 
 
 
-//--------------------------------------------------------
-//отладка. получаем размеры муравья
-antTemplate.style.transform = `translate(${500}px, ${300}px) rotate(${45}deg)`;
+// //--------------------------------------------------------
+// //отладка. получаем размеры муравья
+// antTemplate.style.transform = `translate(${500}px, ${300}px) rotate(${45}deg)`;
 
-const antWidth = antTemplate.getAttribute('width') //получаем размеры SVG. похоже что тоже без учета трансформации. (на rotate не реагирует).
-const antHeight = antTemplate.getAttribute('height'); 
-console.log(`antWidth: ${antWidth}, antHeight: ${antHeight}`);
+// const antWidth = antTemplate.getAttribute('width') //получаем размеры SVG. похоже что тоже без учета трансформации. (на rotate не реагирует).
+// const antHeight = antTemplate.getAttribute('height'); 
+// console.log(`antWidth: ${antWidth}, antHeight: ${antHeight}`);
 
-// Получаем bounding box группы
-const bbox = antTemplate.getBBox(); //получаем размеры и координаты bounding box элемента SVG до применения любых трансформаций
-console.log(`x: ${bbox.x}, y: ${bbox.y}, width: ${bbox.width}, height: ${bbox.height}`);
+// // Получаем bounding box группы
+// const bbox = antTemplate.getBBox(); //получаем размеры и координаты bounding box элемента SVG до применения любых трансформаций
+// console.log(`x: ${bbox.x}, y: ${bbox.y}, width: ${bbox.width}, height: ${bbox.height}`);
 
-//получаем 
+// //получаем 
 
-/*Метод getBoundingClientRect() возвращает объект DOMRect, который содержит координаты и размеры элемента с учетом всех трансформаций: 
-*    x, y — координаты верхнего левого угла элемента относительно viewport.
-*    width, height — размеры элемента.
-*    top, right, bottom, left — координаты границ элемента относительно viewport.
-*Важно:
-*    getBoundingClientRect() учитывает все трансформации, включая translate, rotate, scale и другие.
-*/	
-const rect = antTemplate.getBoundingClientRect();
-console.log(rect); // { x, y, width, height, top, right, bottom, left }
-//получаем размер новой коробки, которая увеличилась из-за поворота муравья.
-//отладка. конец.
-//-----------------------------------------------------------
+// /*Метод getBoundingClientRect() возвращает объект DOMRect, который содержит координаты и размеры элемента с учетом всех трансформаций: 
+// *    x, y — координаты верхнего левого угла элемента относительно viewport.
+// *    width, height — размеры элемента.
+// *    top, right, bottom, left — координаты границ элемента относительно viewport.
+// *Важно:
+// *    getBoundingClientRect() учитывает все трансформации, включая translate, rotate, scale и другие.
+// */	
+// const rect = antTemplate.getBoundingClientRect();
+// console.log(rect); // { x, y, width, height, top, right, bottom, left }
+// //получаем размер новой коробки, которая увеличилась из-за поворота муравья.
+// //отладка. конец.
+// //-----------------------------------------------------------
 
 
 
@@ -305,56 +305,56 @@ function updateAnts() {
 
 
 
-	//муравьи
-  ants.forEach((ant, index) => {
-    let dx = 0;
-    let dy = 0;
+// 	//муравьи
+//   ants.forEach((ant, index) => {
+//     let dx = 0;
+//     let dy = 0;
 
-    const antCenterX = ant.x + antSize / 2;
-    const antCenterY = ant.y + (antSize * 73 / 46) / 2; 
+//     const antCenterX = ant.x + antSize / 2;
+//     const antCenterY = ant.y + (antSize * 73 / 46) / 2; 
 
-    const distanceToMouse = Math.sqrt(Math.pow(mousex - antCenterX, 2) + Math.pow(mousey - antCenterY, 2));
+//     const distanceToMouse = Math.sqrt(Math.pow(mousex - antCenterX, 2) + Math.pow(mousey - antCenterY, 2));
     
-    if (distanceToMouse <= followRadius) {
-      const randomFactor = 0.01 + Math.random() * 0.01; // Случайное изменение скорости
-      dx = (mousex - antCenterX) * randomFactor; // Движение к курсору
-      dy = (mousey - antCenterY) * randomFactor;
-      ant.angle = Math.atan2(dy, dx) * 180 / Math.PI; // Поворот к курсору
-    } else {
-      dx = Math.cos(ant.angle * Math.PI / 180) * ant.speed;
-      dy = Math.sin(ant.angle * Math.PI / 180) * ant.speed;
-      ant.angle += (Math.random() - 0.5) * 10;
-    }
+//     if (distanceToMouse <= followRadius) {
+//       const randomFactor = 0.01 + Math.random() * 0.01; // Случайное изменение скорости
+//       dx = (mousex - antCenterX) * randomFactor; // Движение к курсору
+//       dy = (mousey - antCenterY) * randomFactor;
+//       ant.angle = Math.atan2(dy, dx) * 180 / Math.PI; // Поворот к курсору
+//     } else {
+//       dx = Math.cos(ant.angle * Math.PI / 180) * ant.speed;
+//       dy = Math.sin(ant.angle * Math.PI / 180) * ant.speed;
+//       ant.angle += (Math.random() - 0.5) * 10;
+//     }
 
-    ants.forEach((otherAnt, otherIndex) => {
-      if (index !== otherIndex) {
-        const otherAntCenterX = otherAnt.x + antSize / 2;
-        const otherAntCenterY = otherAnt.y + (antSize * 73 / 46) / 2;
-        const dist = Math.sqrt(Math.pow(antCenterX - otherAntCenterX, 2) + Math.pow(antCenterY - otherAntCenterY, 2));
-        if (dist < avoidRadius) {
-          const avoidStrength = (avoidRadius - dist) / avoidRadius;
-          dx -= (otherAntCenterX - antCenterX) / dist * avoidStrength * 3;
-          dy -= (otherAntCenterY - antCenterY) / dist * avoidStrength * 3;
-        }
-      }
-    });
+//     ants.forEach((otherAnt, otherIndex) => {
+//       if (index !== otherIndex) {
+//         const otherAntCenterX = otherAnt.x + antSize / 2;
+//         const otherAntCenterY = otherAnt.y + (antSize * 73 / 46) / 2;
+//         const dist = Math.sqrt(Math.pow(antCenterX - otherAntCenterX, 2) + Math.pow(antCenterY - otherAntCenterY, 2));
+//         if (dist < avoidRadius) {
+//           const avoidStrength = (avoidRadius - dist) / avoidRadius;
+//           dx -= (otherAntCenterX - antCenterX) / dist * avoidStrength * 3;
+//           dy -= (otherAntCenterY - antCenterY) / dist * avoidStrength * 3;
+//         }
+//       }
+//     });
 
-    ant.x += dx;
-    ant.y += dy;
+//     ant.x += dx;
+//     ant.y += dy;
 
-    // Обработка столкновений с краями экрана
-    if (ant.x < 0 || ant.x > window.innerWidth - antSize || ant.y < 0 || ant.y > window.innerHeight - (antSize * 73 / 46)) {
-      ant.angle += 180; // Разворот
-      ant.x = Math.max(0, Math.min(ant.x, window.innerWidth - antSize));
-      ant.y = Math.max(0, Math.min(ant.y, window.innerHeight - (antSize * 73 / 46)));
-    }
+//     // Обработка столкновений с краями экрана
+//     if (ant.x < 0 || ant.x > window.innerWidth - antSize || ant.y < 0 || ant.y > window.innerHeight - (antSize * 73 / 46)) {
+//       ant.angle += 180; // Разворот
+//       ant.x = Math.max(0, Math.min(ant.x, window.innerWidth - antSize));
+//       ant.y = Math.max(0, Math.min(ant.y, window.innerHeight - (antSize * 73 / 46)));
+//     }
 
-    ant.element.style.left = `${ant.x}px`;
-    ant.element.style.top = `${ant.y}px`;
+//     ant.element.style.left = `${ant.x}px`;
+//     ant.element.style.top = `${ant.y}px`;
 
-    let angle = ant.angle + 90; // Корректировка угла поворота
-    ant.element.style.transform = `rotate(${angle}deg)`;
-  });	
+//     let angle = ant.angle + 90; // Корректировка угла поворота
+//     ant.element.style.transform = `rotate(${angle}deg)`;
+//   });	
 	
 
 
@@ -422,20 +422,20 @@ function updateAnts() {
 		bomb.svg.style.transform = `translate(${bomb.x}px, ${bomb.y}px)`;
 		
 		
-		//столкновения с муравьями
-		const bombRect = bomb.svg.getBoundingClientRect();
-		ants.forEach((ant, index) => {
-			const antRect = ant.element.getBoundingClientRect();
-			if (collision(bombRect, antRect)) { //размер снаряда 10 на 10.
-				//ant.element.style.fill = 'red';
-				ant.element.setAttribute('fill', 'red');
-				//ant.element.setAttribute('display', 'none');
-				ant.element.style.display = 'none'; // Делаем элемент невидимым
-				//debugger
-				antsToDelete.push(ant);
-				bombsToDelete.push(bomb);
-			}
-		});	
+		// //столкновения с муравьями
+		// const bombRect = bomb.svg.getBoundingClientRect();
+		// ants.forEach((ant, index) => {
+		// 	const antRect = ant.element.getBoundingClientRect();
+		// 	if (collision(bombRect, antRect)) { //размер снаряда 10 на 10.
+		// 		//ant.element.style.fill = 'red';
+		// 		ant.element.setAttribute('fill', 'red');
+		// 		//ant.element.setAttribute('display', 'none');
+		// 		ant.element.style.display = 'none'; // Делаем элемент невидимым
+		// 		//debugger
+		// 		antsToDelete.push(ant);
+		// 		bombsToDelete.push(bomb);
+		// 	}
+		// });	
 	});
 
 	bombsToDelete.forEach((bombToDelete, index) => {
