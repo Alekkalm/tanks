@@ -67,7 +67,8 @@ for (let i = 0; i < BombsNum; i++) {
 	  y: 0, 
 	  angle: 0,
 	  speed: 0,
-	  flying: false, //занят или свободен
+	  flying: false, //в полете
+	  exploding: false, //в процессе взрыва
 	  
 	});
   }
@@ -219,7 +220,7 @@ document.addEventListener('keyup', (event) => {
 
 
 function shot(){
-	const bomb = bombsPool.find((bomb) => bomb.flying === false);
+	const bomb = bombsPool.find((bomb) => bomb.flying === false && bomb.exploding === false );
 	if(bomb !== undefined){
 		let sumAngle = t1.k_angle + t1.b_angle;
 		let dx = Math.cos(sumAngle * Math.PI / 180) * 35; //35 - это длинна дула (от центра башни до конца дула). Чтобы снаряд появлялся на конце дула.
@@ -280,11 +281,12 @@ function triggerExplosion(element) {
 	//explosion.style.opacity = 1;
 	bomb.style.opacity = 0;
 	bombText.style.opacity = 0;
+	element.exploding = true;
 
-
-	// animation.finished.then(() => {
-	// 	freeBomb(element); //освобождаем снаряд
-	//   });
+	animation.finished.then(() => {
+		//freeBomb(element); //освобождаем снаряд
+		element.exploding = false;
+	  });
   }
 
 
