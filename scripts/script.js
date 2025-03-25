@@ -54,16 +54,17 @@ for (let i = 0; i < BombsNum; i++) {
 	
 	const bombSVG = bombTemplate.cloneNode(true); // Клонируем шаблон
 	bombSVG.removeAttribute('id'); // Убираем id, чтобы не было дубликатов
-	bombSVG.style.display = 'none'; // Делаем элемент видимым
+	bombSVG.style.display = 'block'; // Делаем элемент видимым
 	bombSVG.style.transformOrigin = 'center center';
+	bombSVG.style.transform = `translate(-100px, 0px)`;//прячем за пределы экрана
 	const bombIdText = bombSVG.querySelector('.bomb_id_text');//ищем по названию класса
 	bombIdText.textContent = i;
 	document.body.appendChild(bombSVG);
   
 	bombsPool.push({
 	  svg: bombSVG,
-	  x: i * 10,
-	  y: 10,
+	  x: - 100, //уводим за пределы экрана
+	  y: 0, 
 	  angle: 0,
 	  speed: 0,
 	  busy: false, //занят или свободен
@@ -228,7 +229,7 @@ function shot(){
 		bomb.angle = sumAngle;//bombAngle,
 		bomb.speed = 2;
 		bomb.busy = true;
-		bomb.svg.style.display = 'block'; // Делаем элемент видимым
+		//bomb.svg.style.display = 'block'; // Делаем элемент видимым
 	}
 }
 
@@ -438,9 +439,13 @@ function updateAnts() {
 	});
 
 	bombsToDelete.forEach((bombToDelete, index) => {
-		bombToDelete.svg.style.display = 'none'; // Делаем элемент невидимым
+		//bombToDelete.svg.style.display = 'none'; // Делаем элемент невидимым
+		bombToDelete.x = -100;
+		bombToDelete.speed = 0;
 		bombToDelete.busy = false;
+		bombToDelete.svg.style.transform = `translate(${bomb.x}px, ${bomb.y}px)`;//прячем за пределы экрана
 	});
+	
 	
 	bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${bombsPool.filter((bomb) => bomb.busy === true).length}`;
 	frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
