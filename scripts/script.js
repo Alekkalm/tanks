@@ -227,7 +227,7 @@ function shot(){
 		let dy = Math.sin(sumAngle * Math.PI / 180) * 35; //вниз - положительный угол, вверх - отрицательный. вправо = 0.
 
 		bomb.x = t1.x + 30 + dx; //+30 - это центр танка
-		bomb.y = t1.y + 20 + dy; //+20 - центр танка
+		bomb.y = t1.y + 30 + dy; //+30 - центр танка
 		bomb.angle = sumAngle;//bombAngle,
 		bomb.speed = 2;
 		bomb.flying = true;
@@ -451,7 +451,7 @@ function updateAnts() {
 
 	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
-	t1.svg_t1b.style.transform = `translate(35px, 25px) rotate(${t1.b_angle}deg) translate(-35px, -25px)`;
+	t1.svg_t1b.style.transform = `translate(35px, 35px) rotate(${t1.b_angle}deg) translate(-35px, -35px)`;
 
 	//снаряды
 	const bombsToDelete = [];
