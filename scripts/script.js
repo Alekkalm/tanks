@@ -447,7 +447,11 @@ function updateAnts() {
 
 	t1.svg_t1k.style.transform = `translate(${t1.x}px, ${t1.y}px)rotate(${t1.k_angle}deg)`;
 	//                                                          |центр вращения башни 15px, 15px|
-	t1.svg_t1b.style.transform = `translate(${t1.x}px, ${t1.y}px) translate(15px, 15px) rotate(${t1.k_angle + t1.b_angle}deg) translate(-15px, -15px)`;
+	//t1.svg_t1b.style.transform = `translate(${t1.x}px, ${t1.y}px) translate(15px, 15px) rotate(${t1.k_angle + t1.b_angle}deg) translate(-15px, -15px)`;
+
+	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
+	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
+	t1.svg_t1b.style.transform = `translate(35px, 25px) rotate(${t1.b_angle}deg) translate(-35px, -25px)`;
 
 	//снаряды
 	const bombsToDelete = [];
