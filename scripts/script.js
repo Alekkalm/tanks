@@ -43,8 +43,8 @@ const t1 = {
     k_angle: 0, //0 = влево
 	b_angle: 0, //0 = влево
     speed: 0,
-	kRect: svg_t1k.getBoundingClientRect(),
-  };
+	kRect: svg_t1k.getBoundingClientRect(), //DOMRect { x: 0, y: 10, width: 70, height: 50, top: 10, right: 70, bottom: 60, left: 0 }
+  };                                        //если переместиться как t2, то: DOMRect { x: 1850, y: 10, width: 70, height: 50, top: 10, right: 1920, bottom: 60, left: 1850 }
 //получаем второй танк
 const svg_t2 = document.getElementById('t2'); 
 const svg_t2k = svg_t2.getElementById('t2k'); 
