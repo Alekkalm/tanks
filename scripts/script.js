@@ -56,7 +56,6 @@ const t2 = {
 	b_angle: 0, //0 = влево
     speed: 0,
   };
-  //t2.svg_t2k.style.transform = `rotate(${t2.k_angle}deg)`; //развернем танк
 
 
 
