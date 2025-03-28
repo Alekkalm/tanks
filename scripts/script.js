@@ -42,6 +42,21 @@ const t1 = {
 	b_angle: 0, //0 = влево
     speed: 0,
   };
+//получаем второй танк
+const svg_t2k = document.getElementById('t2k'); 
+const svg_t2b = document.getElementById('t2b');
+svg_t2k.style.transformOrigin = 'center center'; //только для поворотов (относительно центра)
+svg_t2b.style.transformOrigin = '0 0'; //только для поворотов (относительно левого верхнего угла)
+const t2 = {
+    svg_t2k: svg_t2k,
+	svg_t2b: svg_t2b,
+    x: 0, //левый верхний угол
+    y: 0, //левый верхний угол
+    k_angle: 180, //0 = влево
+	b_angle: 0, //0 = влево
+    speed: 0,
+  };
+  t2.svg_t2k.style.transform = `rotate(${t2.k_angle}deg)`; //развернем танк
 
 
 
