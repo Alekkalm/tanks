@@ -50,7 +50,7 @@ svg_t2b.style.transformOrigin = '0 0'; //только для поворотов 
 const t2 = {
     svg_t2k: svg_t2k,
 	svg_t2b: svg_t2b,
-    x: 0, //левый верхний угол
+    x: window.innerWidth - 70, //правый верхний угол минус длину танка
     y: 0, //левый верхний угол
     k_angle: 180, //0 = влево
 	b_angle: 0, //0 = влево
@@ -279,15 +279,15 @@ document.addEventListener('keyup', (event) => {
 
 
 
-function shot(){
+function shot(tank){
 	const bomb = bombsPool.find((bomb) => bomb.flying === false && bomb.exploding === false );
 	if(bomb !== undefined){
-		let sumAngle = t1.k_angle + t1.b_angle;
+		let sumAngle = tank.k_angle + tank.b_angle;
 		let dx = Math.cos(sumAngle * Math.PI / 180) * 35; //35 - это длинна дула (от центра башни до конца дула). Чтобы снаряд появлялся на конце дула.
 		let dy = Math.sin(sumAngle * Math.PI / 180) * 35; //вниз - положительный угол, вверх - отрицательный. вправо = 0.
 
-		bomb.x = t1.x + 30 + dx; //+30 - это центр танка
-		bomb.y = t1.y + 30 + dy; //+30 - центр танка
+		bomb.x = tank.x + 30 + dx; //+30 - это центр танка
+		bomb.y = tank.y + 30 + dy; //+30 - центр танка
 		bomb.angle = sumAngle;//bombAngle,
 		bomb.speed = 2;
 		bomb.flying = true;
@@ -493,7 +493,7 @@ function updateAnts() {
 	//выстрел
 	if(Space_pressed){
 		//cloneBomb();
-		shot();
+		shot(t1);
 	}
 
 	//повторно используем dx и dy теперь для танков
@@ -525,7 +525,7 @@ function updateAnts() {
 	//выстрел
 	if(T2Fire_pressed){
 		//cloneBomb();
-		shot();
+		shot(t2);
 	}
 
 	//повторно используем dx и dy теперь для танков
