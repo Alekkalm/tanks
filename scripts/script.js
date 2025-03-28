@@ -186,6 +186,14 @@ let keyA_pressed = false;
 let keyW_pressed = false;
 let keyS_pressed = false;
 let keyD_pressed = false;
+let keyQ_pressed = false;
+let keyE_pressed = false;
+//let keyL_pressed = false;
+// let key_pressed = false;
+// let keyS_pressed = false;
+// let keyD_pressed = false;
+// let keyQ_pressed = false;
+// let keyE_pressed = false;
 let ArrowUp_pressed = false;
 let ArrowDown_pressed = false;
 let ArrowLeft_pressed = false;
@@ -202,6 +210,8 @@ document.addEventListener('keydown', (event) => {
     case 'KeyW': keyW_pressed = true; break; 
     case 'KeyS': keyS_pressed = true; break;
     case 'KeyD': keyD_pressed = true; break;
+	case 'KeyQ': keyQ_pressed = true; break;
+    case 'KeyE': keyE_pressed = true; break;
 	case 'ArrowUp': ArrowUp_pressed = true; break; 
     case 'ArrowDown': ArrowDown_pressed = true; break; 
     case 'ArrowLeft': ArrowLeft_pressed = true; break;
@@ -219,6 +229,8 @@ document.addEventListener('keyup', (event) => {
     case 'KeyW': keyW_pressed = false; break; 
     case 'KeyS': keyS_pressed = false; break;
     case 'KeyD': keyD_pressed = false; break;
+	case 'KeyQ': keyQ_pressed = false; break;
+    case 'KeyE': keyE_pressed = false; break;
 	case 'ArrowUp': ArrowUp_pressed = false; break; 
     case 'ArrowDown': ArrowDown_pressed = false; break; 
     case 'ArrowLeft': ArrowLeft_pressed = false; break;
@@ -428,17 +440,17 @@ function updateAnts() {
 	//танки
 	//if(keyA_pressed) t1.x -= 0.1;
 	//if(keyD_pressed) t1.x += 0.1;
-	if(keyA_pressed) t1.b_angle -= 1;
-	if(keyD_pressed) t1.b_angle += 1;
+	if(keyQ_pressed) t1.b_angle -= 1;
+	if(keyE_pressed) t1.b_angle += 1;
 	//if(keyW_pressed) t1.y -= 0.1;
 	//if(keyS_pressed) t1.y += 0.1;
-	if(ArrowLeft_pressed) t1.k_angle -= 1;
-	if(ArrowRight_pressed) t1.k_angle += 1;
+	if(keyA_pressed) t1.k_angle -= 1;
+	if(keyD_pressed) t1.k_angle += 1;
 	t1.speed = 0;
-	if(ArrowUp_pressed){
+	if(keyW_pressed){
 		t1.speed = 1;
 	}
-	if(ArrowDown_pressed){
+	if(keyS_pressed){
 		t1.speed = -1;
 	}
 	//фронт нажатия
