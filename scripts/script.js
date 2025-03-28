@@ -188,12 +188,20 @@ let keyS_pressed = false;
 let keyD_pressed = false;
 let keyQ_pressed = false;
 let keyE_pressed = false;
-//let keyL_pressed = false;
-// let key_pressed = false;
-// let keyS_pressed = false;
-// let keyD_pressed = false;
-// let keyQ_pressed = false;
-// let keyE_pressed = false;
+let ShiftLeft_pressed = false;
+let ShiftLeft_pressed_previous = false;
+let ShiftLeft_pressed_front = false;
+
+let T2Left_pressed = false;
+let T2Forward_pressed = false;
+let T2Backward_pressed = false;
+let T2Right_pressed = false;
+let T2bLeft_pressed = false;
+let T2bRight_pressed = false;
+let T2Fire_pressed = false;
+let T2Fire_pressed_previous = false;
+let T2Fire_pressed_front = false;
+
 let ArrowUp_pressed = false;
 let ArrowDown_pressed = false;
 let ArrowLeft_pressed = false;
@@ -203,6 +211,8 @@ let Space_pressed_previous = false;
 let Space_pressed_front = false;
 let keyR_pressed = false;
 
+//коды клавиш:
+//https://www.w3.org/TR/uievents-code/#key-alphanumeric-section
 // Обработчик события нажатия клавиши
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
@@ -212,6 +222,17 @@ document.addEventListener('keydown', (event) => {
     case 'KeyD': keyD_pressed = true; break;
 	case 'KeyQ': keyQ_pressed = true; break;
     case 'KeyE': keyE_pressed = true; break;
+	case 'ShiftLeft': ShiftLeft_pressed = true; break;
+
+	case 'KeyK': T2Left_pressed = true; break; 
+    case 'KeyO': T2Forward_pressed = true; break; 
+    case 'KeyL': T2Backward_pressed = true; break;
+    case 'Semicolon': T2Right_pressed = true; break;
+	case 'KeyI': T2bLeft_pressed = true; break;
+    case 'KeyP': T2bRight_pressed = true; break;
+	//case 'ShiftRight': T2Fire_pressed = true; break;
+	case 'AltRight': T2Fire_pressed = true; break;
+
 	case 'ArrowUp': ArrowUp_pressed = true; break; 
     case 'ArrowDown': ArrowDown_pressed = true; break; 
     case 'ArrowLeft': ArrowLeft_pressed = true; break;
@@ -231,6 +252,18 @@ document.addEventListener('keyup', (event) => {
     case 'KeyD': keyD_pressed = false; break;
 	case 'KeyQ': keyQ_pressed = false; break;
     case 'KeyE': keyE_pressed = false; break;
+	case 'ShiftLeft': ShiftLeft_pressed = false; break;
+
+	case 'KeyK': T2Left_pressed = false; break; 
+    case 'KeyO': T2Forward_pressed = false; break; 
+    case 'KeyL': T2Backward_pressed = false; break;
+    case 'Semicolon': T2Right_pressed = false; break;
+	case 'KeyI': T2bLeft_pressed = false; break;
+    case 'KeyP': T2bRight_pressed = false; break;
+	//case 'ShiftRight': T2Fire_pressed = false; break;
+	case 'AltRight': T2Fire_pressed = false; break;
+
+
 	case 'ArrowUp': ArrowUp_pressed = false; break; 
     case 'ArrowDown': ArrowDown_pressed = false; break; 
     case 'ArrowLeft': ArrowLeft_pressed = false; break;
@@ -438,6 +471,7 @@ function updateAnts() {
 
 
 	//танки
+	//T1
 	//if(keyA_pressed) t1.x -= 0.1;
 	//if(keyD_pressed) t1.x += 0.1;
 	if(keyQ_pressed) t1.b_angle -= 1;
@@ -461,24 +495,50 @@ function updateAnts() {
 		//cloneBomb();
 		shot();
 	}
-	
-	
-	
+
 	//повторно используем dx и dy теперь для танков
 	let dx = Math.cos(t1.k_angle * Math.PI / 180) * t1.speed;
-    let dy = Math.sin(t1.k_angle * Math.PI / 180) * t1.speed;
+	let dy = Math.sin(t1.k_angle * Math.PI / 180) * t1.speed;
 	
 	t1.x += dx;
-    t1.y += dy;
-
-
+	t1.y += dy;
 	t1.svg_t1k.style.transform = `translate(${t1.x}px, ${t1.y}px)rotate(${t1.k_angle}deg)`;
-	//                                                          |центр вращения башни 15px, 15px|
-	//t1.svg_t1b.style.transform = `translate(${t1.x}px, ${t1.y}px) translate(15px, 15px) rotate(${t1.k_angle + t1.b_angle}deg) translate(-15px, -15px)`;
-
 	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
 	t1.svg_t1b.style.transform = `translate(35px, 35px) rotate(${t1.b_angle}deg) translate(-35px, -35px)`;
+	
+	//Т2
+	if(T2bLeft_pressed) t2.b_angle -= 1;
+	if(T2bRight_pressed) t2.b_angle += 1;
+	if(T2Left_pressed) t2.k_angle -= 1;
+	if(T2Right_pressed) t2.k_angle += 1;
+	t2.speed = 0;
+	if(T2Forward_pressed){
+		t2.speed = 1;
+	}
+	if(T2Backward_pressed){
+		t2.speed = -1;
+	}
+	//фронт нажатия
+	T2Fire_pressed_front = (!T2Fire_pressed_previous && T2Fire_pressed) ? true : false;
+	T2Fire_pressed_previous = T2Fire_pressed;
+	//выстрел
+	if(T2Fire_pressed){
+		//cloneBomb();
+		shot();
+	}
+
+	//повторно используем dx и dy теперь для танков
+	dx = Math.cos(t2.k_angle * Math.PI / 180) * t2.speed;
+    dy = Math.sin(t2.k_angle * Math.PI / 180) * t2.speed;
+	
+	t2.x += dx;
+    t2.y += dy;
+	t2.svg_t2k.style.transform = `translate(${t2.x}px, ${t2.y}px)rotate(${t2.k_angle}deg)`;
+	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
+	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
+	t2.svg_t2b.style.transform = `translate(35px, 35px) rotate(${t2.b_angle}deg) translate(-35px, -35px)`;
+
 
 	//снаряды
 	const bombsToDelete = [];
