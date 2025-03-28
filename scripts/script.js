@@ -29,12 +29,12 @@ const frameNText = document.getElementById('frameN');
 
 //танки
 //получаем первый танк
-const svg_t1k = document.getElementById('t1k'); 
+const svg_t1 = document.getElementById('t1'); 
 const svg_t1b = document.getElementById('t1b');
-svg_t1k.style.transformOrigin = 'center center'; //только для поворотов (относительно центра)
+svg_t1.style.transformOrigin = 'center center'; //только для поворотов (относительно центра)
 svg_t1b.style.transformOrigin = '0 0'; //только для поворотов (относительно левого верхнего угла)
 const t1 = {
-    svg_t1k: svg_t1k,
+    svg_t1: svg_t1,
 	svg_t1b: svg_t1b,
     x: 0, //левый верхний угол
     y: 0, //левый верхний угол
@@ -43,12 +43,12 @@ const t1 = {
     speed: 0,
   };
 //получаем второй танк
-const svg_t2k = document.getElementById('t2k'); 
+const svg_t2 = document.getElementById('t2'); 
 const svg_t2b = document.getElementById('t2b');
-svg_t2k.style.transformOrigin = 'center center'; //только для поворотов (относительно центра)
+svg_t2.style.transformOrigin = 'center center'; //только для поворотов (относительно центра)
 svg_t2b.style.transformOrigin = '0 0'; //только для поворотов (относительно левого верхнего угла)
 const t2 = {
-    svg_t2k: svg_t2k,
+    svg_t2: svg_t2,
 	svg_t2b: svg_t2b,
     x: window.innerWidth - 70, //правый верхний угол минус длину танка
     y: 0, //левый верхний угол
@@ -56,7 +56,7 @@ const t2 = {
 	b_angle: 0, //0 = влево
     speed: 0,
   };
-  t2.svg_t2k.style.transform = `rotate(${t2.k_angle}deg)`; //развернем танк
+  //t2.svg_t2k.style.transform = `rotate(${t2.k_angle}deg)`; //развернем танк
 
 
 
@@ -502,7 +502,7 @@ function updateAnts() {
 	
 	t1.x += dx;
 	t1.y += dy;
-	t1.svg_t1k.style.transform = `translate(${t1.x}px, ${t1.y}px)rotate(${t1.k_angle}deg)`;
+	t1.svg_t1.style.transform = `translate(${t1.x}px, ${t1.y}px)rotate(${t1.k_angle}deg)`;
 	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
 	t1.svg_t1b.style.transform = `translate(35px, 35px) rotate(${t1.b_angle}deg) translate(-35px, -35px)`;
@@ -534,7 +534,7 @@ function updateAnts() {
 	
 	t2.x += dx;
     t2.y += dy;
-	t2.svg_t2k.style.transform = `translate(${t2.x}px, ${t2.y}px)rotate(${t2.k_angle}deg)`;
+	t2.svg_t2.style.transform = `translate(${t2.x}px, ${t2.y}px)rotate(${t2.k_angle}deg)`;
 	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
 	t2.svg_t2b.style.transform = `translate(35px, 35px) rotate(${t2.b_angle}deg) translate(-35px, -35px)`;
