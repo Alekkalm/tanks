@@ -30,31 +30,37 @@ const frameNText = document.getElementById('frameN');
 //танки
 //получаем первый танк
 const svg_t1 = document.getElementById('t1'); 
-const svg_t1b = document.getElementById('t1b');
+const svg_t1k = svg_t1.getElementById('t1k'); 
+const svg_t1b = svg_t1.getElementById('t1b');
 svg_t1.style.transformOrigin = 'center center'; //только для поворотов (относительно центра)
 svg_t1b.style.transformOrigin = '0 0'; //только для поворотов (относительно левого верхнего угла)
 const t1 = {
     svg_t: svg_t1,
+	svg_tk: svg_t1k,
 	svg_tb: svg_t1b,
     x: 0, //левый верхний угол
     y: 0, //левый верхний угол
     k_angle: 0, //0 = влево
 	b_angle: 0, //0 = влево
     speed: 0,
+	kRect: svg_t1k.getBoundingClientRect(),
   };
 //получаем второй танк
 const svg_t2 = document.getElementById('t2'); 
-const svg_t2b = document.getElementById('t2b');
+const svg_t2k = svg_t2.getElementById('t2k'); 
+const svg_t2b = svg_t2.getElementById('t2b');
 svg_t2.style.transformOrigin = 'center center'; //только для поворотов (относительно центра)
 svg_t2b.style.transformOrigin = '0 0'; //только для поворотов (относительно левого верхнего угла)
 const t2 = {
     svg_t: svg_t2,
+	svg_tk: svg_t2k,
 	svg_tb: svg_t2b,
     x: window.innerWidth - 70, //правый верхний угол минус длину танка
     y: 0, //левый верхний угол
     k_angle: 180, //0 = влево
 	b_angle: 0, //0 = влево
     speed: 0,
+	kRect: svg_t2k.getBoundingClientRect(),
   };
 
 
@@ -505,6 +511,7 @@ function updateAnts() {
 	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
 	t1.svg_tb.style.transform = `translate(35px, 35px) rotate(${t1.b_angle}deg) translate(-35px, -35px)`;
+	t1.kRect = t1.svg_tk.getBoundingClientRect(); //после перемещения, пересчитываем BoundingRectangle корпуса танка
 	
 	//Т2
 	if(T2bLeft_pressed) t2.b_angle -= 1;
@@ -537,6 +544,7 @@ function updateAnts() {
 	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
 	t2.svg_tb.style.transform = `translate(35px, 35px) rotate(${t2.b_angle}deg) translate(-35px, -35px)`;
+	t2.kRect = t2.svg_tk.getBoundingClientRect();//после перемещения, пересчитываем BoundingRectangle корпуса танка
 
 
 	//снаряды
