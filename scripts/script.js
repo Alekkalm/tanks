@@ -89,11 +89,32 @@ for (let i = 0; i < BombsNum; i++) {
 	  speed: 0,
 	  flying: false, //в полете
 	  exploding: false, //в процессе взрыва
-	  
 	});
   }
 
-
+  //стены
+  const wallsNum = 50;
+  const walls = [];
+  const wallTemplate = document.getElementById('wallTemplate'); // Находим шаблон
+  for (let i = 0; i < wallsNum; i++) {
+	  
+	  const wallSVG = wallTemplate.cloneNode(true); // Клонируем шаблон
+	  wallSVG.removeAttribute('id'); // Убираем id, чтобы не было дубликатов
+	  wallSVG.style.display = 'block'; // Делаем элемент видимым
+	  wallSVG.style.transformOrigin = 'center center';
+	  const wallIdText = wallSVG.querySelector('.wall_id_text');//ищем по названию класса
+	  wallIdText.textContent = i;
+	  document.body.appendChild(wallSVG);
+	  const x = Math.random() * (window.innerWidth - 30);
+	  const y = Math.random() * (window.innerHeight - 30);
+	  wallSVG.style.transform = `translate(${x}px, ${y}px)`;
+	  walls.push({
+		svg: wallSVG,
+		x: x,
+		y: y,
+		angle: 0,
+	  });
+	}
 
 
 
