@@ -85,6 +85,8 @@ for (let i = 0; i < BombsNum; i++) {
 	  svg: bombSVG,
 	  x: - 100, //уводим за пределы экрана
 	  y: 0, 
+	  width: 10,
+	  height: 10,
 	  angle: 0,
 	  speed: 0,
 	  flying: false, //в полете
@@ -112,6 +114,8 @@ for (let i = 0; i < BombsNum; i++) {
 		svg: wallSVG,
 		x: x,
 		y: y,
+		width: 30,
+		height: 30,
 		angle: 0,
 	  });
 	}
@@ -342,6 +346,31 @@ function collision(a, b){
 	return dist < (a_diametr + b_diametr)/2;
 }
 
+function rectCollision(a, b){
+	const a_LeftTopX = a.x;
+	const a_LeftTopY = a.y;
+	const a_RightTopX = a.x + a.width;
+	const a_RightTopY = a.y;
+	const a_LeftBottomX = a.x;
+	const a_LeftBottomY = a.y + a.height;
+	const a_RightBottomX = a.x + a.width;
+	const a_RightBottomY = a.y + a.height;
+
+	const b_LeftX = b.x ;
+	const b_RightX = b.x + b.width;
+	const b_TopY = b.y;
+	const b_BottomY = b.y + b.height;
+
+	const collision = b_LeftX < a_LeftTopX && a_LeftTopX < b_RightX &&
+					  b_TopY < a_LeftTopY 	&& a_LeftTopY < b_BottomY ||
+					  b_LeftX < a_RightTopX && a_RightTopX < b_RightX &&
+					  b_TopY < a_RightTopY 	&& a_RightTopY < b_BottomY ||
+					  b_LeftX < a_LeftBottomX && a_LeftBottomX < b_RightX &&
+					  b_TopY < a_LeftBottomY 	&& a_LeftBottomY < b_BottomY ||
+					  b_LeftX < a_RightBottomX && a_RightBottomX < b_RightX &&
+					  b_TopY < a_RightBottomY 	&& a_RightBottomY < b_BottomY
+	return collision;
+}
 
 
 function triggerExplosion(element) {
@@ -578,12 +607,19 @@ function updateAnts() {
 
 		bomb.x += dx;
 		bomb.y += dy;
+		bomb.svg.style.transform = `translate(${bomb.x}px, ${bomb.y}px)`;
 
-		// Обработка столкновений с краями экрана
+		// Обработка столкновений
+		//с краями экрана
 		if (bomb.x < 0 || bomb.x > window.innerWidth - 10 || bomb.y < 0 || bomb.y > window.innerHeight - 10) { //размер снаряда 10 на 10.
 			bombsToDelete.push(bomb);
 		}
-		bomb.svg.style.transform = `translate(${bomb.x}px, ${bomb.y}px)`;
+		//с блоками стен
+		walls.forEach((wall, index) => {
+			if (rectCollision(bomb, wall)) { //размер снаряда 10 на 10.
+				bombsToDelete.push(bomb);
+			}
+		})
 		
 		
 		// //столкновения с муравьями
