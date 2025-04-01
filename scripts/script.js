@@ -50,6 +50,7 @@ const t1 = {
 	boundingBox:[{x:0, y:10},{x:70, y:10},
 				 {x:0, y:60},{x:70, y:60}],
 	s: 50*70,
+	center: { x: 35, y: 35 }, //координаты центра вращения, для пересчета boundingBox.
 	};
 //получаем второй танк
 const svg_t2 = document.getElementById('t2'); 
@@ -72,6 +73,7 @@ const t2 = {
 	boundingBox:[{x:0, y:0},{x:0, y:0},
 				 {x:0, y:0},{x:0, y:0}],
 	s: 50*70,
+	center: { x: 35, y: 35 }, //координаты центра вращения, для пересчета boundingBox.
   };
 
   const tanks = [];
@@ -101,10 +103,11 @@ for (let i = 0; i < BombsNum; i++) {
 	  y: 0, 
 	  width: 10,
 	  height: 10,
-	  initialBoundingBox:[{x:0, y:0},{x:10, y:0},
-						  {x:0, y:10},{x:10, y:10}],
-	  boundingBox:[{x:-100, y:0},{x:-90, y:0},
-		           {x:-100, y:10},{x:-90, y:10}],
+	//   initialBoundingBox:[{x:0, y:0},{x:10, y:0},
+	// 					  {x:0, y:10},{x:10, y:10}],
+	//   boundingBox:[{x:-100, y:0},{x:-90, y:0},
+	// 	           {x:-100, y:10},{x:-90, y:10}],
+	//   center: { x: 5, y: 5 }, //координаты центра вращения, для пересчета boundingBox.
 	  angle: 0,
 	  speed: 0,
 	  flying: false, //в полете
@@ -323,6 +326,51 @@ document.addEventListener('keyup', (event) => {
 
 
 
+// --- Трансформации ---
+// 1. Сдвиг (Translate)
+function translate(point, dx, dy) {
+    return { x: point.x + dx, y: point.y + dy };
+}
+
+//масштабирование у нас не используется
+// 2. Масштабирование (Scale)
+function scale(point, sx, sy, center = { x: 0, y: 0 }) {
+    return {
+        x: center.x + (point.x - center.x) * sx,
+        y: center.y + (point.y - center.y) * sy
+    };
+}
+
+// 3. Поворот (Rotate)
+function rotate(point, angleDegrees, center = { x: 0, y: 0 }) {
+    const angleRad = angleDegrees * Math.PI / 180;
+    const cos = Math.cos(angleRad);
+    const sin = Math.sin(angleRad);
+    const x = point.x - center.x;
+    const y = point.y - center.y;
+    return {
+        x: center.x + (x * cos - y * sin),
+        y: center.y + (x * sin + y * cos)
+    };
+}
+
+
+
+
+//для тех кто только движется и не поворачивается.
+//не используется
+function translateBoundingBox(a){
+	a.initialBoundingBox.forEach((point, index)=>{a.boundingBox[index] = translate(point, a.x, a.y)});
+}
+
+function recalcBoundingBox(a){
+	a.initialBoundingBox.forEach((point, index)=>{
+		const p1 = rotate(point, a.k_angle, a.center);
+		const p2 = translate(p1, a.x, a.y);
+		a.boundingBox[index].x = p2.x;
+		a.boundingBox[index].y = p2.y;
+	});
+}
 
 
 
@@ -418,9 +466,7 @@ function bombTankCollision(b, t){
     return Math.abs(s1 + s2 + s3 + s4 - t.s) < epsilon;
 }
 
-function recalcBoundingBox(a){
-	
-}
+
 
 
 // ankBombCollision(a, b){
@@ -699,7 +745,7 @@ function updateAnts() {
 		bomb.x += dx;
 		bomb.y += dy;
 		bomb.svg.style.transform = `translate(${bomb.x}px, ${bomb.y}px)`;
-		recalcBoundingBox(bomb);
+		//recalcBoundingBox(bomb);
 
 		// Обработка столкновений
 		//с краями экрана
