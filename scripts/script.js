@@ -44,7 +44,13 @@ const t1 = {
 	b_angle: 0, //0 = влево
     speed: 0,
 	kRect: svg_t1k.getBoundingClientRect(), //DOMRect { x: 0, y: 10, width: 70, height: 50, top: 10, right: 70, bottom: 60, left: 0 }
-  };                                        //если переместиться как t2, то: DOMRect { x: 1850, y: 10, width: 70, height: 50, top: 10, right: 1920, bottom: 60, left: 1850 }
+                                            //если переместиться как t2, то: DOMRect { x: 1850, y: 10, width: 70, height: 50, top: 10, right: 1920, bottom: 60, left: 1850 }
+	initialBoundingBox:[{x:0, y:10},{x:70, y:10},
+				 		{x:0, y:60},{x:70, y:60}],
+	boundingBox:[{x:0, y:10},{x:70, y:10},
+				 {x:0, y:60},{x:70, y:60}],
+	s: 50*70,
+	};
 //получаем второй танк
 const svg_t2 = document.getElementById('t2'); 
 const svg_t2k = svg_t2.getElementById('t2k'); 
@@ -61,8 +67,16 @@ const t2 = {
 	b_angle: 0, //0 = влево
     speed: 0,
 	kRect: svg_t2k.getBoundingClientRect(),
+	initialBoundingBox:[{x:0, y:10},{x:70, y:10},
+						{x:0, y:60},{x:70, y:60}],
+	boundingBox:[{x:0, y:0},{x:0, y:0},
+				 {x:0, y:0},{x:0, y:0}],
+	s: 50*70,
   };
 
+  const tanks = [];
+  tanks.push(t1);
+  tanks.push(t2);
 
 
 
@@ -87,6 +101,10 @@ for (let i = 0; i < BombsNum; i++) {
 	  y: 0, 
 	  width: 10,
 	  height: 10,
+	  initialBoundingBox:[{x:0, y:0},{x:10, y:0},
+						  {x:0, y:10},{x:10, y:10}],
+	  boundingBox:[{x:-100, y:0},{x:-90, y:0},
+		           {x:-100, y:10},{x:-90, y:10}],
 	  angle: 0,
 	  speed: 0,
 	  flying: false, //в полете
@@ -372,6 +390,77 @@ function rectCollision(a, b){
 	return collision;
 }
 
+// Функция вычисления площади треугольника
+function calculateArea(x1, y1, x2, y2, x3, y3) {
+	return Math.abs((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)) / 2;
+}
+
+function bombTankCollision(b, t){
+    
+	//точка внутри четырехугольника
+	//метод площадей
+
+	//представим снаряд в виде точки с координатами центра
+	bx = b.x+5;
+	by = b.y+5;
+
+	//площадь танка = t.s
+
+	//площади 4-х треугольников, образованых точкой снаряда и точками углов танка
+	s1 = calculateArea(bx, by, t.boundingBox[0].x, t.boundingBox[0].y, t.boundingBox[1].x, t.boundingBox[1].y);
+	s2 = calculateArea(bx, by, t.boundingBox[1].x, t.boundingBox[1].y, t.boundingBox[2].x, t.boundingBox[2].y);
+	s3 = calculateArea(bx, by, t.boundingBox[2].x, t.boundingBox[2].y, t.boundingBox[3].x, t.boundingBox[3].y);
+	s4 = calculateArea(bx, by, t.boundingBox[3].x, t.boundingBox[3].y, t.boundingBox[0].x, t.boundingBox[0].y);
+
+	// Учитываем погрешность вычислений (из-за float)
+    //const epsilon = 1e-10;
+	const epsilon = 100; //при тесте оказалось что разность между суммами площадей треугольников и площадью танка почти 61
+    return Math.abs(s1 + s2 + s3 + s4 - t.s) < epsilon;
+}
+
+function recalcBoundingBox(a){
+	
+}
+
+
+// ankBombCollision(a, b){
+// 	const a_LeftTopX = a.x;
+// 	const a_LeftTopY = a.y;
+// 	const a_RightTopX = a.x + a.width;
+// 	const a_RightTopY = a.y;
+// 	const a_LeftBottomX = a.x;
+// 	const a_LeftBottomY = a.y + a.height;
+// 	const a_RightBottomX = a.x + a.width;
+// 	const a_RightBottomY = a.y + a.height;
+
+// 	const b_LeftTopX = b.x;
+// 	const b_LeftTopY = b.y;
+// 	const b_RightTopX = b.x + b.width;
+// 	const b_RightTopY = b.y;
+// 	const b_LeftBottomX = b.x;
+// 	const b_LeftBottomY = b.y + b.height;
+// 	const b_RightBottomX = b.x + b.width;
+// 	const b_RightBottomY = b.y + b.height;
+// t
+// 	const d11_x = 
+// 	const d12_x =
+// 	const d13_x =
+// 	const d14_x =
+
+
+// 	const collision = b_LeftX < a_LeftTopX && a_LeftTopX < b_RightX &&
+// 					  b_TopY < a_LeftTopY 	&& a_LeftTopY < b_BottomY ||
+// 					  b_LeftX < a_RightTopX && a_RightTopX < b_RightX &&
+// 					  b_TopY < a_RightTopY 	&& a_RightTopY < b_BottomY ||
+// 					  b_LeftX < a_LeftBottomX && a_LeftBottomX < b_RightX &&
+// 					  b_TopY < a_LeftBottomY 	&& a_LeftBottomY < b_BottomY ||
+// 					  b_LeftX < a_RightBottomX && a_RightBottomX < b_RightX &&
+// 					  b_TopY < a_RightBottomY 	&& a_RightBottomY < b_BottomY
+// 	return collision;
+// }
+
+
+
 
 function triggerExplosion(element) {
 	const bomb = element.svg.querySelector('.bomb');//ищем по названию класса
@@ -562,6 +651,8 @@ function updateAnts() {
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
 	t1.svg_tb.style.transform = `translate(35px, 35px) rotate(${t1.b_angle}deg) translate(-35px, -35px)`;
 	t1.kRect = t1.svg_tk.getBoundingClientRect(); //после перемещения, пересчитываем BoundingRectangle корпуса танка
+	recalcBoundingBox(t1);
+	
 	
 	//Т2
 	if(T2bLeft_pressed) t2.b_angle -= 1;
@@ -595,7 +686,7 @@ function updateAnts() {
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
 	t2.svg_tb.style.transform = `translate(35px, 35px) rotate(${t2.b_angle}deg) translate(-35px, -35px)`;
 	t2.kRect = t2.svg_tk.getBoundingClientRect();//после перемещения, пересчитываем BoundingRectangle корпуса танка
-
+	recalcBoundingBox(t2);
 
 	//снаряды
 	const bombsToDelete = [];
@@ -608,6 +699,7 @@ function updateAnts() {
 		bomb.x += dx;
 		bomb.y += dy;
 		bomb.svg.style.transform = `translate(${bomb.x}px, ${bomb.y}px)`;
+		recalcBoundingBox(bomb);
 
 		// Обработка столкновений
 		//с краями экрана
@@ -616,7 +708,13 @@ function updateAnts() {
 		}
 		//с блоками стен
 		walls.forEach((wall, index) => {
-			if (rectCollision(bomb, wall)) { //размер снаряда 10 на 10.
+			if (rectCollision(bomb, wall)) { 
+				bombsToDelete.push(bomb);
+			}
+		})
+		//с танками
+		tanks.forEach((tank, index) => {
+			if (bombTankCollision(bomb, tank)) { 
 				bombsToDelete.push(bomb);
 			}
 		})
