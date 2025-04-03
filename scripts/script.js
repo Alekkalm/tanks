@@ -1,3 +1,5 @@
+'use strict'; //всегда объявлять переменные
+
 //FPS
 let lastTimeOneSec = performance.now(); // Время последнего кадра
 let lastTime = performance.now(); // Время последнего кадра
@@ -435,16 +437,16 @@ function bombTankCollision(b, t){
 	//метод площадей
 
 	//представим снаряд в виде точки с координатами центра
-	bx = b.x+5;
-	by = b.y+5;
+	const bx = b.x+5;
+	const by = b.y+5;
 
 	//площадь танка = t.s
 
 	//площади 4-х треугольников, образованых точкой снаряда и точками углов танка
-	s1 = calculateArea(bx, by, t.boundingBox[0].x, t.boundingBox[0].y, t.boundingBox[1].x, t.boundingBox[1].y);
-	s2 = calculateArea(bx, by, t.boundingBox[1].x, t.boundingBox[1].y, t.boundingBox[2].x, t.boundingBox[2].y);
-	s3 = calculateArea(bx, by, t.boundingBox[2].x, t.boundingBox[2].y, t.boundingBox[3].x, t.boundingBox[3].y);
-	s4 = calculateArea(bx, by, t.boundingBox[3].x, t.boundingBox[3].y, t.boundingBox[0].x, t.boundingBox[0].y);
+	const s1 = calculateArea(bx, by, t.boundingBox[0].x, t.boundingBox[0].y, t.boundingBox[1].x, t.boundingBox[1].y);
+	const s2 = calculateArea(bx, by, t.boundingBox[1].x, t.boundingBox[1].y, t.boundingBox[2].x, t.boundingBox[2].y);
+	const s3 = calculateArea(bx, by, t.boundingBox[2].x, t.boundingBox[2].y, t.boundingBox[3].x, t.boundingBox[3].y);
+	const s4 = calculateArea(bx, by, t.boundingBox[3].x, t.boundingBox[3].y, t.boundingBox[0].x, t.boundingBox[0].y);
 
 	// Учитываем погрешность вычислений (из-за float)
     //const epsilon = 1e-10;
@@ -452,8 +454,60 @@ function bombTankCollision(b, t){
     return Math.abs(s1 + s2 + s3 + s4 - t.s) < epsilon;
 }
 
+function point2rectCollision(px,py,x1,y1,x2,y2,x3,y3,x4,y4){
+	//площади 4-х треугольников, образованых точкой и точками углов прямоугольника
+	const s1 = calculateArea(px, py, x1, y1, x2, y2);
+	const s2 = calculateArea(px, py, x2, y2, x3, y3);
+	const s3 = calculateArea(px, py, x3, y3, x4, y4);
+	const s4 = calculateArea(px, py, x4, y4, x1, y1);
+	//площадь прямоугольника
+	const sr = calculateArea(x1, y1, x2, y2, x3, y3) * 2;
+	// Учитываем погрешность вычислений (из-за float)
+	const epsilon = sr*0.03; //3% от площади прямоугольника
+    return Math.abs(s1 + s2 + s3 + s4 - sr) < epsilon;
+}
 
+function rect2rectCollision(r1x1,r1y1,r1x2,r1y2,r1x3,r1y3,r1x4,r1y4,r2x1,r2y1,r2x2,r2y2,r2x3,r2y3,r2x4,r2y4){
+	//(поиск предлагает Separating Axis Theorem (SAT). нужно построить нормали к сторонам прямоугольников, и спроецировать на них прямоугольники
+	//если проекции не пересекаются хотябы на одной из нормали, то пересечения нет.)
+	//мы пока пойдем другим путем:
+	//если хотябы один угол прямоугольника внутри другого (и наоборот), то коллизия.
+	return 	point2rectCollision(r1x1,r1y1, r2x1,r2y1,r2x2,r2y2,r2x3,r2y3,r2x4,r2y4) ||
+			point2rectCollision(r1x2,r1y2, r2x1,r2y1,r2x2,r2y2,r2x3,r2y3,r2x4,r2y4) ||
+			point2rectCollision(r1x3,r1y3, r2x1,r2y1,r2x2,r2y2,r2x3,r2y3,r2x4,r2y4) ||
+			point2rectCollision(r1x4,r1y4, r2x1,r2y1,r2x2,r2y2,r2x3,r2y3,r2x4,r2y4) ||
 
+			point2rectCollision(r2x1,r2y1, r1x1,r1y1,r1x2,r1y2,r1x3,r1y3,r1x4,r1y4) ||
+			point2rectCollision(r2x2,r2y2, r1x1,r1y1,r1x2,r1y2,r1x3,r1y3,r1x4,r1y4) ||
+			point2rectCollision(r2x3,r2y3, r1x1,r1y1,r1x2,r1y2,r1x3,r1y3,r1x4,r1y4) ||
+			point2rectCollision(r2x4,r2y4, r1x1,r1y1,r1x2,r1y2,r1x3,r1y3,r1x4,r1y4);
+}
+
+function t_recCollision(t,rx1,ry1,rx2,ry2,rx3,ry3,rx4,ry4){
+	return rect2rectCollision( 	t.boundingBox[0].x, t.boundingBox[0].y, t.boundingBox[1].x, t.boundingBox[1].y,
+								t.boundingBox[0].x, t.boundingBox[0].y, t.boundingBox[1].x, t.boundingBox[1].y,
+			 					rx1,ry1,rx2,ry2,rx3,ry3,rx4,ry4);
+}
+
+function t_windowCollision(t){
+	const w = window.innerWidth;
+	const h = window.innerHeight;
+	return 	t.boundingBox[0].x < 0 || t.boundingBox[1].x < 0 || t.boundingBox[2].x < 0 || t.boundingBox[3].x < 0 ||
+			t.boundingBox[0].x > w || t.boundingBox[1].x > w || t.boundingBox[2].x > w || t.boundingBox[3].x > w ||
+			t.boundingBox[0].y < 0 || t.boundingBox[1].y < 0 || t.boundingBox[2].y < 0 || t.boundingBox[3].y < 0 ||
+			t.boundingBox[0].y > h || t.boundingBox[1].y > h || t.boundingBox[2].y > h || t.boundingBox[3].y > h ;
+}
+function t1collision(){
+
+	const c = t_windowCollision(t1)
+	return c;
+}
+
+function t2collision(){
+
+	const c = t_windowCollision(t2)
+	return c;
+}
 
 // ankBombCollision(a, b){
 // 	const a_LeftTopX = a.x;
@@ -674,12 +728,18 @@ function updateAnts() {
 	
 	t1.x += dx;
 	t1.y += dy;
+	recalcBoundingBox(t1);
+	if(t1collision()){
+		t1.x -= dx;
+    	t1.y -= dy;
+		recalcBoundingBox(t1);
+	}
 	t1.svg_t.style.transform = `translate(${t1.x}px, ${t1.y}px)rotate(${t1.k_angle}deg)`;
 	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
 	t1.svg_tb.style.transform = `translate(35px, 35px) rotate(${t1.b_angle}deg) translate(-35px, -35px)`;
-	t1.kRect = t1.svg_tk.getBoundingClientRect(); //после перемещения, пересчитываем BoundingRectangle корпуса танка
-	recalcBoundingBox(t1);
+	//t1.kRect = t1.svg_tk.getBoundingClientRect(); //после перемещения, пересчитываем BoundingRectangle корпуса танка
+	
 	
 	
 	//Т2
@@ -709,12 +769,18 @@ function updateAnts() {
 	
 	t2.x += dx;
     t2.y += dy;
+	recalcBoundingBox(t2);
+	if(t2collision()){
+		t2.x -= dx;
+    	t2.y -= dy;
+		recalcBoundingBox(t2);
+	}
 	t2.svg_t.style.transform = `translate(${t2.x}px, ${t2.y}px)rotate(${t2.k_angle}deg)`;
 	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
 	t2.svg_tb.style.transform = `translate(35px, 35px) rotate(${t2.b_angle}deg) translate(-35px, -35px)`;
-	t2.kRect = t2.svg_tk.getBoundingClientRect();//после перемещения, пересчитываем BoundingRectangle корпуса танка
-	recalcBoundingBox(t2);
+	//t2.kRect = t2.svg_tk.getBoundingClientRect();//после перемещения, пересчитываем BoundingRectangle корпуса танка
+	
 
 	//снаряды
 	const bombsToDelete = [];
