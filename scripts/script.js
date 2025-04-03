@@ -54,6 +54,7 @@ const t1 = {
 				 {x:0, y:60},{x:70, y:60}],
 	s: 50*70,
 	center: { x: 35, y: 35 }, //координаты центра вращения, для пересчета boundingBox.
+	bText: svg_t1b.querySelector('.b_text'),//текст на башне
 	};
 //получаем второй танк
 const svg_t2 = document.getElementById('t2'); 
@@ -78,6 +79,7 @@ const t2 = {
 				 {x:0, y:0},{x:0, y:0}],
 	s: 50*70,
 	center: { x: 35, y: 35 }, //координаты центра вращения, для пересчета boundingBox.
+	bText: svg_t2b.querySelector('.b_text'),//текст на башне
   };
 
   const tanks = [];
@@ -857,7 +859,8 @@ function updateAnts() {
 		bombToDelete.svg.style.transform = `translate(${bomb.x}px, ${bomb.y}px)`;//прячем за пределы экрана
 	});
 	
-	
+	t1.bText.textContent = (t1BombsPool.length - t1flyingBombs.length).toString();
+	t2.bText.textContent = (t2BombsPool.length - t2flyingBombs.length).toString();
 	bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${flyingBombs.length}`;
 	frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
 	const codeDelta = performance.now() - lastTimeCode;
