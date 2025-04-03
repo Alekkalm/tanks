@@ -128,7 +128,7 @@ fillBombsPool(t2BombsPool, BombsNum);
 const BombsPool = [...t1BombsPool, ...t2BombsPool];
 
   //стены
-  const wallsNum = 50;
+  const wallsNum = 30;
   const walls = [];
   const wallTemplate = document.getElementById('wallTemplate'); // Находим шаблон
   for (let i = 0; i < wallsNum; i++) {
@@ -150,6 +150,7 @@ const BombsPool = [...t1BombsPool, ...t2BombsPool];
 		width: 30,
 		height: 30,
 		angle: 0,
+		id: i,
 	  });
 	}
 
@@ -489,7 +490,7 @@ function rect2rectCollision(r1x1,r1y1,r1x2,r1y2,r1x3,r1y3,r1x4,r1y4,r2x1,r2y1,r2
 
 function t_recCollision(t,rx1,ry1,rx2,ry2,rx3,ry3,rx4,ry4){
 	return rect2rectCollision( 	t.boundingBox[0].x, t.boundingBox[0].y, t.boundingBox[1].x, t.boundingBox[1].y,
-								t.boundingBox[0].x, t.boundingBox[0].y, t.boundingBox[1].x, t.boundingBox[1].y,
+								t.boundingBox[2].x, t.boundingBox[2].y, t.boundingBox[3].x, t.boundingBox[3].y,
 			 					rx1,ry1,rx2,ry2,rx3,ry3,rx4,ry4);
 }
 
@@ -502,14 +503,34 @@ function t_windowCollision(t){
 			t.boundingBox[0].y > h || t.boundingBox[1].y > h || t.boundingBox[2].y > h || t.boundingBox[3].y > h ;
 }
 function t1collision(){
-
-	const c = t_windowCollision(t1)
+	let c = t_windowCollision(t1);
+	//с блоками стен
+	walls.forEach((w, index) => {
+			if (t_recCollision(t1, w.x,w.y, w.x+w.width,w.y, w.x+w.width,w.y+w.height, w.x,w.y+w.height)) { 
+			c = true;
+		}
+	})
+	//с танком
+	if (t_recCollision(t1, t2.boundingBox[0].x, t2.boundingBox[0].y, t2.boundingBox[1].x, t2.boundingBox[1].y,
+						   t2.boundingBox[2].x, t2.boundingBox[2].y, t2.boundingBox[3].x, t2.boundingBox[3].y)) { 
+		c = true;
+	}
 	return c;
 }
 
 function t2collision(){
-
-	const c = t_windowCollision(t2)
+	let c = t_windowCollision(t2);
+	//с блоками стен
+	walls.forEach((w, index) => {
+			if (t_recCollision(t2, w.x,w.y, w.x+w.width,w.y, w.x+w.width,w.y+w.height, w.x,w.y+w.height)) { 
+			c = true;
+		}
+	})
+	//с танком
+	if (t_recCollision(t1, t2.boundingBox[0].x, t2.boundingBox[0].y, t2.boundingBox[1].x, t2.boundingBox[1].y,
+						   t2.boundingBox[2].x, t2.boundingBox[2].y, t2.boundingBox[3].x, t2.boundingBox[3].y)) { 
+		c = true;
+	}
 	return c;
 }
 
