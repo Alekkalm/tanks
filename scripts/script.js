@@ -83,37 +83,43 @@ const t2 = {
 
 
   //снаряды
-const BombsNum = 50;
-const bombsPool = [];
-const bombTemplate = document.getElementById('bomb'); // Находим шаблон
-for (let i = 0; i < BombsNum; i++) {
+  function fillBombsPool(bombsPool, bombsNum){
+	for (let i = 0; i < bombsNum; i++) {
+		
+		const bombSVG = bombTemplate.cloneNode(true); // Клонируем шаблон
+		bombSVG.removeAttribute('id'); // Убираем id, чтобы не было дубликатов
+		bombSVG.style.display = 'block'; // Делаем элемент видимым
+		bombSVG.style.transformOrigin = 'center center';
+		bombSVG.style.transform = `translate(-100px, 0px)`;//прячем за пределы экрана
+		const bombIdText = bombSVG.querySelector('.bomb_id_text');//ищем по названию класса
+		bombIdText.textContent = i;
+		document.body.appendChild(bombSVG);
 	
-	const bombSVG = bombTemplate.cloneNode(true); // Клонируем шаблон
-	bombSVG.removeAttribute('id'); // Убираем id, чтобы не было дубликатов
-	bombSVG.style.display = 'block'; // Делаем элемент видимым
-	bombSVG.style.transformOrigin = 'center center';
-	bombSVG.style.transform = `translate(-100px, 0px)`;//прячем за пределы экрана
-	const bombIdText = bombSVG.querySelector('.bomb_id_text');//ищем по названию класса
-	bombIdText.textContent = i;
-	document.body.appendChild(bombSVG);
-  
-	bombsPool.push({
-	  svg: bombSVG,
-	  x: - 100, //уводим за пределы экрана
-	  y: 0, 
-	  width: 10,
-	  height: 10,
-	//   initialBoundingBox:[{x:0, y:0},{x:10, y:0},
-	// 					  {x:0, y:10},{x:10, y:10}],
-	//   boundingBox:[{x:-100, y:0},{x:-90, y:0},
-	// 	           {x:-100, y:10},{x:-90, y:10}],
-	//   center: { x: 5, y: 5 }, //координаты центра вращения, для пересчета boundingBox.
-	  angle: 0,
-	  speed: 0,
-	  flying: false, //в полете
-	  exploding: false, //в процессе взрыва
-	});
-  }
+		bombsPool.push({
+		svg: bombSVG,
+		x: - 100, //уводим за пределы экрана
+		y: 0, 
+		width: 10,
+		height: 10,
+		//   initialBoundingBox:[{x:0, y:0},{x:10, y:0},
+		// 					  {x:0, y:10},{x:10, y:10}],
+		//   boundingBox:[{x:-100, y:0},{x:-90, y:0},
+		// 	           {x:-100, y:10},{x:-90, y:10}],
+		//   center: { x: 5, y: 5 }, //координаты центра вращения, для пересчета boundingBox.
+		angle: 0,
+		speed: 0,
+		flying: false, //в полете
+		exploding: false, //в процессе взрыва
+		});
+	}
+}
+const BombsNum = 50;
+const t1BombsPool = [];
+const t2BombsPool = [];
+const bombTemplate = document.getElementById('bomb'); // Находим шаблон
+fillBombsPool(t1BombsPool, BombsNum);
+fillBombsPool(t2BombsPool, BombsNum);
+const BombsPool = [...t1BombsPool, ...t2BombsPool];
 
   //стены
   const wallsNum = 50;
@@ -355,7 +361,7 @@ function recalcBoundingBox(a){
 
 
 
-function shot(tank){
+function shot(tank, bombsPool){
 	const bomb = bombsPool.find((bomb) => bomb.flying === false && bomb.exploding === false );
 	if(bomb !== undefined){
 		let sumAngle = tank.k_angle + tank.b_angle;
@@ -659,7 +665,7 @@ function updateAnts() {
 	//выстрел
 	if(T1Fire_pressed){
 		//cloneBomb();
-		shot(t1);
+		shot(t1,t1BombsPool);
 	}
 
 	//повторно используем dx и dy теперь для танков
@@ -694,7 +700,7 @@ function updateAnts() {
 	//выстрел
 	if(T2Fire_pressed){
 		//cloneBomb();
-		shot(t2);
+		shot(t2, t2BombsPool);
 	}
 
 	//повторно используем dx и dy теперь для танков
@@ -712,8 +718,10 @@ function updateAnts() {
 
 	//снаряды
 	const bombsToDelete = [];
-	const antsToDelete = [];
-	const flyingBombs = bombsPool.filter((bomb) => bomb.flying === true);
+	//const antsToDelete = [];
+	const t1flyingBombs = t1BombsPool.filter((bomb) => bomb.flying === true);
+	const t2flyingBombs = t2BombsPool.filter((bomb) => bomb.flying === true);
+	const flyingBombs = [...t1flyingBombs, ...t2flyingBombs];
 	flyingBombs.forEach((bomb, index) => {
 		let dx = Math.cos(bomb.angle * Math.PI / 180) * bomb.speed; //вниз - положительный угол, вверх - отрицательный. вправо = 0.
 		let dy = Math.sin(bomb.angle * Math.PI / 180) * bomb.speed;
@@ -734,13 +742,7 @@ function updateAnts() {
 				bombsToDelete.push(bomb);
 			}
 		})
-		//с танками
-		tanks.forEach((tank, index) => {
-			if (bombTankCollision(bomb, tank)) { 
-				bombsToDelete.push(bomb);
-			}
-		})
-		
+	
 		
 		// //столкновения с муравьями
 		// const bombRect = bomb.svg.getBoundingClientRect();
@@ -758,6 +760,18 @@ function updateAnts() {
 		// });	
 	});
 
+	//с танками
+	t1flyingBombs.forEach((bomb, index) => {
+			if (bombTankCollision(bomb, t2)) { 
+				bombsToDelete.push(bomb);
+			}
+	});
+	t2flyingBombs.forEach((bomb, index) => {
+			if (bombTankCollision(bomb, t1)) { 
+				bombsToDelete.push(bomb);
+			}
+	});	
+
 	bombsToDelete.forEach((bombToDelete, index) => {
 		//bombToDelete.svg.style.display = 'none'; // Делаем элемент невидимым
 		triggerExplosion(bombToDelete);
@@ -768,7 +782,7 @@ function updateAnts() {
 	});
 	
 	
-	bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${bombsPool.filter((bomb) => bomb.flying === true).length}`;
+	bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${flyingBombs.length}`;
 	frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
 	const codeDelta = performance.now() - lastTimeCode;
 	codeDT.textContent = `код дельта Т: ${codeDelta}`;
