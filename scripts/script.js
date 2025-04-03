@@ -233,15 +233,15 @@ document.addEventListener('mouseout', () => {
 });
 
 //нажатые клавиши
-let keyA_pressed = false;
-let keyW_pressed = false;
-let keyS_pressed = false;
-let keyD_pressed = false;
-let keyQ_pressed = false;
-let keyE_pressed = false;
-let ShiftLeft_pressed = false;
-let ShiftLeft_pressed_previous = false;
-let ShiftLeft_pressed_front = false;
+let T1Left_pressed = false;
+let T1Forward_pressed = false;
+let T1Backward_pressed = false;
+let T1Right_pressed = false;
+let T1bLeft_pressed = false;
+let T1bRight_pressed = false;
+let T1Fire_pressed = false;
+let T1Fire_pressed_previous = false;
+let T1Fire_pressed_front = false;
 
 let T2Left_pressed = false;
 let T2Forward_pressed = false;
@@ -253,13 +253,6 @@ let T2Fire_pressed = false;
 let T2Fire_pressed_previous = false;
 let T2Fire_pressed_front = false;
 
-let ArrowUp_pressed = false;
-let ArrowDown_pressed = false;
-let ArrowLeft_pressed = false;
-let ArrowRight_pressed = false;
-let Space_pressed = false;
-let Space_pressed_previous = false;
-let Space_pressed_front = false;
 let keyR_pressed = false;
 
 //коды клавиш:
@@ -267,28 +260,22 @@ let keyR_pressed = false;
 // Обработчик события нажатия клавиши
 document.addEventListener('keydown', (event) => {
   switch (event.code) {
-	case 'KeyA': keyA_pressed = true; break; 
-    case 'KeyW': keyW_pressed = true; break; 
-    case 'KeyS': keyS_pressed = true; break;
-    case 'KeyD': keyD_pressed = true; break;
-	case 'KeyQ': keyQ_pressed = true; break;
-    case 'KeyE': keyE_pressed = true; break;
-	case 'ShiftLeft': ShiftLeft_pressed = true; break;
+	case 'KeyA': T1Left_pressed = true; break; 
+    case 'KeyW': T1Forward_pressed = true; break; 
+    case 'KeyS': T1Backward_pressed = true; break;
+    case 'KeyD': T1Right_pressed = true; break;
+	case 'KeyQ': T1bLeft_pressed = true; break;
+    case 'KeyE': T1bRight_pressed = true; break;
+	case 'Space': T1Fire_pressed = true; break;
 
-	case 'KeyK': T2Left_pressed = true; break; 
-    case 'KeyO': T2Forward_pressed = true; break; 
-    case 'KeyL': T2Backward_pressed = true; break;
-    case 'Semicolon': T2Right_pressed = true; break;
+	case 'ArrowLeft': T2Left_pressed = true; break; 
+    case 'ArrowUp': T2Forward_pressed = true; break; 
+    case 'ArrowDown': T2Backward_pressed = true; break;
+    case 'ArrowRight': T2Right_pressed = true; break;
 	case 'KeyI': T2bLeft_pressed = true; break;
     case 'KeyP': T2bRight_pressed = true; break;
-	//case 'ShiftRight': T2Fire_pressed = true; break;
-	case 'AltRight': T2Fire_pressed = true; break;
+	case 'KeyO': T2Fire_pressed = true; break;
 
-	case 'ArrowUp': ArrowUp_pressed = true; break; 
-    case 'ArrowDown': ArrowDown_pressed = true; break; 
-    case 'ArrowLeft': ArrowLeft_pressed = true; break;
-    case 'ArrowRight': ArrowRight_pressed = true; break;
-	case 'Space': Space_pressed = true; break;
 	case 'KeyR': keyR_pressed = true; break; 
   }
   //console.log(event.code);
@@ -297,29 +284,22 @@ document.addEventListener('keydown', (event) => {
 // Обработчик события отпускания клавиши
 document.addEventListener('keyup', (event) => {
   switch (event.code) {
-	case 'KeyA': keyA_pressed = false; break; 
-    case 'KeyW': keyW_pressed = false; break; 
-    case 'KeyS': keyS_pressed = false; break;
-    case 'KeyD': keyD_pressed = false; break;
-	case 'KeyQ': keyQ_pressed = false; break;
-    case 'KeyE': keyE_pressed = false; break;
-	case 'ShiftLeft': ShiftLeft_pressed = false; break;
+	case 'KeyA': T1Left_pressed = false; break; 
+    case 'KeyW': T1Forward_pressed = false; break; 
+    case 'KeyS': T1Backward_pressed = false; break;
+    case 'KeyD': T1Right_pressed = false; break;
+	case 'KeyQ': T1bLeft_pressed = false; break;
+    case 'KeyE': T1bRight_pressed = false; break;
+	case 'Space': T1Fire_pressed = false; break;
 
-	case 'KeyK': T2Left_pressed = false; break; 
-    case 'KeyO': T2Forward_pressed = false; break; 
-    case 'KeyL': T2Backward_pressed = false; break;
-    case 'Semicolon': T2Right_pressed = false; break;
+	case 'ArrowLeft': T2Left_pressed = false; break; 
+    case 'ArrowUp': T2Forward_pressed = false; break; 
+    case 'ArrowDown': T2Backward_pressed = false; break;
+    case 'ArrowRight': T2Right_pressed = false; break;
 	case 'KeyI': T2bLeft_pressed = false; break;
     case 'KeyP': T2bRight_pressed = false; break;
-	//case 'ShiftRight': T2Fire_pressed = false; break;
-	case 'AltRight': T2Fire_pressed = false; break;
+	case 'KeyO': T2Fire_pressed = false; break;
 
-
-	case 'ArrowUp': ArrowUp_pressed = false; break; 
-    case 'ArrowDown': ArrowDown_pressed = false; break; 
-    case 'ArrowLeft': ArrowLeft_pressed = false; break;
-    case 'ArrowRight': ArrowRight_pressed = false; break;
-	case 'Space': Space_pressed = false; break;
 	case 'KeyR': keyR_pressed = false; break; 
   }
 });
@@ -662,26 +642,22 @@ function updateAnts() {
 
 	//танки
 	//T1
-	//if(keyA_pressed) t1.x -= 0.1;
-	//if(keyD_pressed) t1.x += 0.1;
-	if(keyQ_pressed) t1.b_angle -= 1;
-	if(keyE_pressed) t1.b_angle += 1;
-	//if(keyW_pressed) t1.y -= 0.1;
-	//if(keyS_pressed) t1.y += 0.1;
-	if(keyA_pressed) t1.k_angle -= 1;
-	if(keyD_pressed) t1.k_angle += 1;
+	if(T1bLeft_pressed) t1.b_angle -= 1;
+	if(T1bRight_pressed) t1.b_angle += 1;
+	if(T1Left_pressed) t1.k_angle -= 1;
+	if(T1Right_pressed) t1.k_angle += 1;
 	t1.speed = 0;
-	if(keyW_pressed){
+	if(T1Forward_pressed){
 		t1.speed = 1;
 	}
-	if(keyS_pressed){
+	if(T1Backward_pressed){
 		t1.speed = -1;
 	}
 	//фронт нажатия
-	Space_pressed_front = (!Space_pressed_previous && Space_pressed) ? true : false;
-	Space_pressed_previous = Space_pressed;
+	T1Fire_pressed_front = (!T1Fire_pressed_previous && T1Fire_pressed) ? true : false;
+	T1Fire_pressed_previous = T1Fire_pressed;
 	//выстрел
-	if(Space_pressed){
+	if(T1Fire_pressed){
 		//cloneBomb();
 		shot(t1);
 	}
