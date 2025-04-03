@@ -44,7 +44,8 @@ const t1 = {
     y: 0, //левый верхний угол
     k_angle: 0, //0 = влево
 	b_angle: 0, //0 = влево
-    speed: 0,
+	speed: 0,
+	k_angleSpeed: 0,
 	kRect: svg_t1k.getBoundingClientRect(), //DOMRect { x: 0, y: 10, width: 70, height: 50, top: 10, right: 70, bottom: 60, left: 0 }
                                             //если переместиться как t2, то: DOMRect { x: 1850, y: 10, width: 70, height: 50, top: 10, right: 1920, bottom: 60, left: 1850 }
 	initialBoundingBox:[{x:0, y:10},{x:70, y:10},
@@ -69,6 +70,7 @@ const t2 = {
     k_angle: 180, //0 = влево
 	b_angle: 0, //0 = влево
     speed: 0,
+	k_angleSpeed: 0,
 	kRect: svg_t2k.getBoundingClientRect(),
 	initialBoundingBox:[{x:0, y:10},{x:70, y:10},
 						{x:0, y:60},{x:70, y:60}],
@@ -704,8 +706,9 @@ function updateAnts() {
 	//T1
 	if(T1bLeft_pressed) t1.b_angle -= 1;
 	if(T1bRight_pressed) t1.b_angle += 1;
-	if(T1Left_pressed) t1.k_angle -= 1;
-	if(T1Right_pressed) t1.k_angle += 1;
+	t1.k_angleSpeed = 0;
+	if(T1Left_pressed) t1.k_angleSpeed = -1; //через скорость а не напрямую, чтобы при коллизиях можно было вернуть обратно
+	if(T1Right_pressed) t1.k_angleSpeed = 1;
 	t1.speed = 0;
 	if(T1Forward_pressed){
 		t1.speed = 1;
@@ -723,6 +726,8 @@ function updateAnts() {
 	}
 
 	//повторно используем dx и dy теперь для танков
+	t1.k_angle += t1.k_angleSpeed;
+
 	let dx = Math.cos(t1.k_angle * Math.PI / 180) * t1.speed;
 	let dy = Math.sin(t1.k_angle * Math.PI / 180) * t1.speed;
 	
@@ -732,6 +737,7 @@ function updateAnts() {
 	if(t1collision()){
 		t1.x -= dx;
     	t1.y -= dy;
+		t1.k_angle -= t1.k_angleSpeed;
 		recalcBoundingBox(t1);
 	}
 	t1.svg_t.style.transform = `translate(${t1.x}px, ${t1.y}px)rotate(${t1.k_angle}deg)`;
@@ -745,8 +751,9 @@ function updateAnts() {
 	//Т2
 	if(T2bLeft_pressed) t2.b_angle -= 1;
 	if(T2bRight_pressed) t2.b_angle += 1;
-	if(T2Left_pressed) t2.k_angle -= 1;
-	if(T2Right_pressed) t2.k_angle += 1;
+	t2.k_angleSpeed = 0;
+	if(T2Left_pressed) t2.k_angleSpeed = -1;
+	if(T2Right_pressed) t2.k_angleSpeed = 1;
 	t2.speed = 0;
 	if(T2Forward_pressed){
 		t2.speed = 1;
@@ -764,6 +771,8 @@ function updateAnts() {
 	}
 
 	//повторно используем dx и dy теперь для танков
+	t2.k_angle += t2.k_angleSpeed;
+
 	dx = Math.cos(t2.k_angle * Math.PI / 180) * t2.speed;
     dy = Math.sin(t2.k_angle * Math.PI / 180) * t2.speed;
 	
@@ -773,6 +782,7 @@ function updateAnts() {
 	if(t2collision()){
 		t2.x -= dx;
     	t2.y -= dy;
+		t2.k_angle -= t2.k_angleSpeed;
 		recalcBoundingBox(t2);
 	}
 	t2.svg_t.style.transform = `translate(${t2.x}px, ${t2.y}px)rotate(${t2.k_angle}deg)`;
