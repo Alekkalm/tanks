@@ -34,14 +34,16 @@ const frameNText = document.getElementById('frameN');
 const svg_t1 = document.getElementById('t1'); 
 const svg_t1k = svg_t1.getElementById('t1k'); 
 const svg_t1b = svg_t1.getElementById('t1b');
+const svg_t1hp = document.getElementById('t1_hp'); 
 svg_t1.style.transformOrigin = 'center center'; //только для поворотов (относительно центра)
 svg_t1b.style.transformOrigin = '0 0'; //только для поворотов (относительно левого верхнего угла)
 const t1 = {
     svg_t: svg_t1,
 	svg_tk: svg_t1k,
 	svg_tb: svg_t1b,
+	svg_hp: svg_t1hp,
     x: 0, //левый верхний угол
-    y: 0, //левый верхний угол
+    y: 30, //левый верхний угол
     k_angle: 0, //0 = влево
 	b_angle: 0, //0 = влево
 	speed: 0,
@@ -56,20 +58,22 @@ const t1 = {
 	center: { x: 35, y: 35 }, //координаты центра вращения, для пересчета boundingBox.
 	bText: svg_t1b.querySelector('.b_text'),//текст на башне
 	hp: 150,
-	hpText: svg_t1.querySelector('.hp'),//текст health Point
+	hpText: svg_t1hp.querySelector('.hp'),//svg_t1.querySelector('.hp'),//текст health Point
 	};
 //получаем второй танк
 const svg_t2 = document.getElementById('t2'); 
 const svg_t2k = svg_t2.getElementById('t2k'); 
 const svg_t2b = svg_t2.getElementById('t2b');
+const svg_t2hp = document.getElementById('t2_hp'); 
 svg_t2.style.transformOrigin = 'center center'; //только для поворотов (относительно центра)
 svg_t2b.style.transformOrigin = '0 0'; //только для поворотов (относительно левого верхнего угла)
 const t2 = {
     svg_t: svg_t2,
 	svg_tk: svg_t2k,
 	svg_tb: svg_t2b,
+	svg_hp: svg_t2hp,
     x: window.innerWidth - 70, //правый верхний угол минус длину танка
-    y: 0, //левый верхний угол
+    y: 30, //левый верхний угол
     k_angle: 180, //0 = влево
 	b_angle: 0, //0 = влево
     speed: 0,
@@ -83,7 +87,7 @@ const t2 = {
 	center: { x: 35, y: 35 }, //координаты центра вращения, для пересчета boundingBox.
 	bText: svg_t2b.querySelector('.b_text'),//текст на башне
 	hp: 150,
-	hpText: svg_t2.querySelector('.hp'),//текст health Point
+	hpText: svg_t2hp.querySelector('.hp'),//svg_t2.querySelector('.hp'),//текст health Point
   };
 
   const tanks = [];
@@ -771,6 +775,7 @@ function updateAnts() {
 		recalcBoundingBox(t1);
 	}
 	t1.svg_t.style.transform = `translate(${t1.x}px, ${t1.y}px)rotate(${t1.k_angle}deg)`;
+	t1.svg_hp.style.transform = `translate(${t1.x}px, ${t1.y-30}px)`; 
 	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
 	t1.svg_tb.style.transform = `translate(35px, 35px) rotate(${t1.b_angle}deg) translate(-35px, -35px)`;
@@ -816,6 +821,7 @@ function updateAnts() {
 		recalcBoundingBox(t2);
 	}
 	t2.svg_t.style.transform = `translate(${t2.x}px, ${t2.y}px)rotate(${t2.k_angle}deg)`;
+	t2.svg_hp.style.transform = `translate(${t2.x}px, ${t2.y-30}px)`; 
 	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
 	t2.svg_tb.style.transform = `translate(35px, 35px) rotate(${t2.b_angle}deg) translate(-35px, -35px)`;
