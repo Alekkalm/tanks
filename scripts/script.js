@@ -48,12 +48,12 @@ const t1 = {
 	k_angleSpeed: 0,
 	kRect: svg_t1k.getBoundingClientRect(), //DOMRect { x: 0, y: 10, width: 70, height: 50, top: 10, right: 70, bottom: 60, left: 0 }
                                             //если переместиться как t2, то: DOMRect { x: 1850, y: 10, width: 70, height: 50, top: 10, right: 1920, bottom: 60, left: 1850 }
-	initialBoundingBox:[{x:0, y:10},{x:70, y:10},
-				 		{x:0, y:60},{x:70, y:60}],
-	boundingBox:[{x:0, y:10},{x:70, y:10},
-				 {x:0, y:60},{x:70, y:60}],
+	initialBoundingBox:[{x:10, y:40},{x:80, y:40},
+				 		{x:10, y:90},{x:80, y:90}],
+	boundingBox:[{x:10, y:40},{x:80, y:40},
+				 {x:10, y:90},{x:80, y:90}],
 	s: 50*70,
-	center: { x: 35, y: 35 }, //координаты центра вращения, для пересчета boundingBox.
+	center: { x: 45, y: 65 }, //координаты центра вращения, для пересчета boundingBox.
 	bText: svg_t1b.querySelector('.b_text'),//текст на башне
 	hp: 150,
 	hpText: svg_t1.querySelector('.hp'),//текст health Point
@@ -68,19 +68,19 @@ const t2 = {
     svg_t: svg_t2,
 	svg_tk: svg_t2k,
 	svg_tb: svg_t2b,
-    x: window.innerWidth - 70, //правый верхний угол минус длину танка
+    x: window.innerWidth - 80, //правый верхний угол минус длину танка
     y: 0, //левый верхний угол
     k_angle: 180, //0 = влево
 	b_angle: 0, //0 = влево
     speed: 0,
 	k_angleSpeed: 0,
 	kRect: svg_t2k.getBoundingClientRect(),
-	initialBoundingBox:[{x:0, y:10},{x:70, y:10},
-						{x:0, y:60},{x:70, y:60}],
+	initialBoundingBox:[{x:10, y:40},{x:80, y:40},
+						{x:10, y:90},{x:80, y:90}],
 	boundingBox:[{x:0, y:0},{x:0, y:0},
 				 {x:0, y:0},{x:0, y:0}],
 	s: 50*70,
-	center: { x: 35, y: 35 }, //координаты центра вращения, для пересчета boundingBox.
+	center: { x: 45, y: 65 }, //координаты центра вращения, для пересчета boundingBox.
 	bText: svg_t2b.querySelector('.b_text'),//текст на башне
 	hp: 150,
 	hpText: svg_t2.querySelector('.hp'),//текст health Point
@@ -382,8 +382,8 @@ function shot(tank, bombsPool){
 		let dx = Math.cos(sumAngle * Math.PI / 180) * 35; //35 - это длинна дула (от центра башни до конца дула). Чтобы снаряд появлялся на конце дула.
 		let dy = Math.sin(sumAngle * Math.PI / 180) * 35; //вниз - положительный угол, вверх - отрицательный. вправо = 0.
 
-		bomb.x = tank.x + 30 + dx; //+30 - это центр танка
-		bomb.y = tank.y + 30 + dy; //+30 - центр танка
+		bomb.x = tank.x + 40 + dx; //+30 - это центр танка
+		bomb.y = tank.y + 60 + dy; //+30 - центр танка
 		bomb.angle = sumAngle;//bombAngle,
 		bomb.speed = 2;
 		bomb.flying = true;
@@ -770,10 +770,13 @@ function updateAnts() {
 		t1.k_angle -= t1.k_angleSpeed;
 		recalcBoundingBox(t1);
 	}
-	t1.svg_t.style.transform = `translate(${t1.x}px, ${t1.y}px)rotate(${t1.k_angle}deg)`;
+	//t1.svg_t.style.transform = `translate(${t1.x}px, ${t1.y}px)rotate(${t1.k_angle}deg)`;
+	t1.svg_t.style.transform = `translate(${t1.x}px, ${t1.y}px)`;
+	t1.svg_tk.style.transform = `translate(45px, 65px) rotate(${t1.k_angle}deg) translate(-45px, -65px)`;
+
 	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
-	t1.svg_tb.style.transform = `translate(35px, 35px) rotate(${t1.b_angle}deg) translate(-35px, -35px)`;
+	t1.svg_tb.style.transform = `translate(45px, 65px) rotate(${t1.k_angle + t1.b_angle}deg) translate(-45px, -65px)`;
 	//t1.kRect = t1.svg_tk.getBoundingClientRect(); //после перемещения, пересчитываем BoundingRectangle корпуса танка
 	
 	
@@ -815,12 +818,12 @@ function updateAnts() {
 		t2.k_angle -= t2.k_angleSpeed;
 		recalcBoundingBox(t2);
 	}
-	t2.svg_t.style.transform = `translate(${t2.x}px, ${t2.y}px)rotate(${t2.k_angle}deg)`;
+	t2.svg_t.style.transform = `translate(${t2.x}px, ${t2.y}px)`;
+	t2.svg_tk.style.transform = `translate(45px, 65px) rotate(${t2.k_angle}deg) translate(-45px, -65px)`;
 	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
-	t2.svg_tb.style.transform = `translate(35px, 35px) rotate(${t2.b_angle}deg) translate(-35px, -35px)`;
-	//t2.kRect = t2.svg_tk.getBoundingClientRect();//после перемещения, пересчитываем BoundingRectangle корпуса танка
-	
+	t2.svg_tb.style.transform = `translate(45px, 65px) rotate(${t2.k_angle + t2.b_angle}deg) translate(-45px, -65px)`;
+	//t1.kRect = t1.svg_tk.getBoundingClientRect(); //после перемещения, пересчитываем BoundingRectangle корпуса танка
 
 	//снаряды
 	const bombsToDelete = [];
