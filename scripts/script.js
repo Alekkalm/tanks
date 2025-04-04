@@ -55,6 +55,8 @@ const t1 = {
 	s: 50*70,
 	center: { x: 35, y: 35 }, //координаты центра вращения, для пересчета boundingBox.
 	bText: svg_t1b.querySelector('.b_text'),//текст на башне
+	hp: 150,
+	hpText: svg_t1.querySelector('.hp'),//текст health Point
 	};
 //получаем второй танк
 const svg_t2 = document.getElementById('t2'); 
@@ -80,6 +82,8 @@ const t2 = {
 	s: 50*70,
 	center: { x: 35, y: 35 }, //координаты центра вращения, для пересчета boundingBox.
 	bText: svg_t2b.querySelector('.b_text'),//текст на башне
+	hp: 150,
+	hpText: svg_t2.querySelector('.hp'),//текст health Point
   };
 
   const tanks = [];
@@ -99,7 +103,8 @@ const t2 = {
 		bombSVG.style.transform = `translate(-100px, 0px)`;//прячем за пределы экрана
 		const bombIdText = bombSVG.querySelector('.bomb_id_text');//ищем по названию класса
 		bombIdText.textContent = i;
-		document.body.appendChild(bombSVG);
+		//document.body.appendChild(bombSVG);
+		document.body.insertBefore(bombSVG, svg_t1); // Добавляем ПЕРЕД(порядок отрисовки) танком t1 (чтобы тексты танка были всегда видны, даже если наехали на снаряд)
 	
 		bombsPool.push({
 		svg: bombSVG,
@@ -139,7 +144,9 @@ const BombsPool = [...t1BombsPool, ...t2BombsPool];
 	  wallSVG.style.transformOrigin = 'center center';
 	  const wallIdText = wallSVG.querySelector('.wall_id_text');//ищем по названию класса
 	  wallIdText.textContent = i;
-	  document.body.appendChild(wallSVG);
+	  //document.body.appendChild(wallSVG);
+	  document.body.insertBefore(wallSVG, svg_t1); // Добавляем ПЕРЕД(порядок отрисовки) танком t1 (чтобы тексты танка были всегда видны, даже если наехали на стену)
+	  
 	  const x = Math.random() * (window.innerWidth - 30);
 	  const y = Math.random() * (window.innerHeight - 30);
 	  wallSVG.style.transform = `translate(${x}px, ${y}px)`;
@@ -863,11 +870,13 @@ function updateAnts() {
 	t1flyingBombs.forEach((bomb, index) => {
 			if (bombTankCollision(bomb, t2)) { 
 				bombsToDelete.push(bomb);
+				t2.hp -=1;
 			}
 	});
 	t2flyingBombs.forEach((bomb, index) => {
 			if (bombTankCollision(bomb, t1)) { 
 				bombsToDelete.push(bomb);
+				t1.hp -=1;
 			}
 	});	
 
@@ -880,8 +889,10 @@ function updateAnts() {
 		bombToDelete.svg.style.transform = `translate(${bomb.x}px, ${bomb.y}px)`;//прячем за пределы экрана
 	});
 	
-	t1.bText.textContent = (t1BombsPool.length - t1flyingBombs.length).toString();
-	t2.bText.textContent = (t2BombsPool.length - t2flyingBombs.length).toString();
+	t1.bText.textContent = t1BombsPool.filter((bomb) => bomb.flying === false && bomb.exploding === false).length.toString();
+	t2.bText.textContent = t2BombsPool.filter((bomb) => bomb.flying === false && bomb.exploding === false).length.toString();
+	t1.hpText.textContent = t1.hp;
+	t2.hpText.textContent = t2.hp;
 	bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${flyingBombs.length}`;
 	frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
 	const codeDelta = performance.now() - lastTimeCode;
