@@ -26,14 +26,16 @@ const frameNText = document.getElementById('frameN');
 
 
 
-
+const mainSvg = document.getElementById('mainSvg'); 
+mainSvg.style.width = `${window.innerWidth}px`;
+mainSvg.style.height = `${window.innerHeight}px`;
 
 
 //танки
 //получаем первый танк
-const svg_t1 = document.getElementById('t1'); 
-const svg_t1k = svg_t1.getElementById('t1k'); 
-const svg_t1b = svg_t1.getElementById('t1b');
+const svg_t1 = mainSvg.getElementById('t1'); 
+const svg_t1k = mainSvg.getElementById('t1k'); 
+const svg_t1b = mainSvg.getElementById('t1b');
 svg_t1.style.transformOrigin = 'center center'; //только для поворотов (относительно центра)
 svg_t1b.style.transformOrigin = '0 0'; //только для поворотов (относительно левого верхнего угла)
 const t1 = {
@@ -104,7 +106,7 @@ const t2 = {
 		const bombIdText = bombSVG.querySelector('.bomb_id_text');//ищем по названию класса
 		bombIdText.textContent = i;
 		//document.body.appendChild(bombSVG);
-		document.body.insertBefore(bombSVG, svg_t1); // Добавляем ПЕРЕД(порядок отрисовки) танком t1 (чтобы тексты танка были всегда видны, даже если наехали на снаряд)
+		document.body.insertBefore(bombSVG, mainSvg); // Добавляем ПЕРЕД(порядок отрисовки) танком t1 (чтобы тексты танка были всегда видны, даже если наехали на снаряд)
 	
 		bombsPool.push({
 		svg: bombSVG,
@@ -145,7 +147,7 @@ const BombsPool = [...t1BombsPool, ...t2BombsPool];
 	  const wallIdText = wallSVG.querySelector('.wall_id_text');//ищем по названию класса
 	  wallIdText.textContent = i;
 	  //document.body.appendChild(wallSVG);
-	  document.body.insertBefore(wallSVG, svg_t1); // Добавляем ПЕРЕД(порядок отрисовки) танком t1 (чтобы тексты танка были всегда видны, даже если наехали на стену)
+	  document.body.insertBefore(wallSVG, mainSvg); // Добавляем ПЕРЕД(порядок отрисовки) танком t1 (чтобы тексты танка были всегда видны, даже если наехали на стену)
 	  
 	  const x = Math.random() * (window.innerWidth - 30);
 	  const y = Math.random() * (window.innerHeight - 30);
