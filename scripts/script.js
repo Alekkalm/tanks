@@ -636,12 +636,12 @@ function triggerTankExplosion(element) {
 	//const tankExplosionSVG = document.getElementById('tankExplosion');
 	tankExplosionSVG.style.transform = `translate(${element.x + element.center.x - 100}px, ${element.y + element.center.y - 100}px)`;//100,100 - это центр картинки explosion 
 	const circles = tankExplosionSVG.querySelectorAll('.particles');//ищем по названию класса
-	console.log(`circles.length: ${circles.length}`);
+	//console.log(`circles.length: ${circles.length}`);
 	circles.forEach((circle, index) => {
 		const animation = circle.animate([
 		{ transform: 'translate(0, 0)', opacity: 1 },
 
-		{ transform: `translate(${(Math.random()-0.5)*2*100}px, ${(Math.random()-0.5)*2*100}px)`, opacity: 0, filter: 'brightness(5)' }
+		{ transform: `translate(${(Math.random()-0.5)*2*100}px, ${(Math.random()-0.5)*2*100}px) rotate(${0}deg)`, opacity: 0.5, filter: 'brightness(5)' }
 		], {
 		duration: 1500,
 		easing: 'ease-out',
