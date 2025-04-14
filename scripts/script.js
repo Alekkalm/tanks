@@ -58,7 +58,9 @@ const t1 = {
 	center: { x: 35, y: 35 }, //координаты центра вращения, для пересчета boundingBox.
 	bText: svg_t1b.querySelector('.b_text'),//текст на башне
 	hp: 150,
+	prevHp: 150,//предыдущий hp. чтобы обнаружить фронт
 	hpText: svg_t1hp.querySelector('.hp'),//svg_t1.querySelector('.hp'),//текст health Point
+	exploding: false,
 	};
 //получаем второй танк
 const svg_t2 = document.getElementById('t2'); 
@@ -87,14 +89,18 @@ const t2 = {
 	center: { x: 35, y: 35 }, //координаты центра вращения, для пересчета boundingBox.
 	bText: svg_t2b.querySelector('.b_text'),//текст на башне
 	hp: 150,
+	prevHp: 150,//предыдущий hp. чтобы обнаружить фронт
 	hpText: svg_t2hp.querySelector('.hp'),//svg_t2.querySelector('.hp'),//текст health Point
+	exploding: false,
   };
 
   const tanks = [];
   tanks.push(t1);
   tanks.push(t2);
 
-
+//взрыв от танка
+const tankExplosionSVG = document.getElementById('tankExplosion');
+	tankExplosionSVG.style.transform = `translate(-200px, 0px)`;//прячем за пределы экрана
 
   //снаряды
   function fillBombsPool(bombsPool, bombsNum){
@@ -626,6 +632,32 @@ function triggerExplosion(element) {
 // 	element.svg.style.transform = `translate(${element.x}px, ${element.y}px)`;//прячем за пределы экрана
 // }
 
+function triggerTankExplosion(element) {
+	//const tankExplosionSVG = document.getElementById('tankExplosion');
+	tankExplosionSVG.style.transform = `translate(${element.x + element.center.x - 100}px, ${element.y + element.center.y - 100}px)`;//100,100 - это центр картинки explosion 
+	const circles = tankExplosionSVG.querySelectorAll('.particles');//ищем по названию класса
+	console.log(`circles.length: ${circles.length}`);
+	circles.forEach((circle, index) => {
+		const animation = circle.animate([
+		{ transform: 'translate(0, 0)', opacity: 1 },
+
+		{ transform: `translate(${(Math.random()-0.5)*2*100}px, ${(Math.random()-0.5)*2*100}px)`, opacity: 0, filter: 'brightness(5)' }
+		], {
+		duration: 1500,
+		easing: 'ease-out',
+		fill: 'forwards'
+		});
+
+		//bomb.style.opacity = 0;
+		//bombText.style.opacity = 0;
+		element.exploding = true;
+
+		animation.finished.then(() => {
+			element.exploding = false;
+		});
+	})
+  }
+
 
 function updateAnts() {
 	
@@ -774,7 +806,7 @@ function updateAnts() {
 		t1.k_angle -= t1.k_angleSpeed;
 		recalcBoundingBox(t1);
 	}
-	t1.svg_t.style.transform = `translate(${t1.x}px, ${t1.y}px)rotate(${t1.k_angle}deg)`;
+	t1.svg_t.style.transform = `translate(${t1.x}px, ${t1.y}px) rotate(${t1.k_angle}deg)`;
 	t1.svg_hp.style.transform = `translate(${t1.x}px, ${t1.y-30}px)`; 
 	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
@@ -820,7 +852,7 @@ function updateAnts() {
 		t2.k_angle -= t2.k_angleSpeed;
 		recalcBoundingBox(t2);
 	}
-	t2.svg_t.style.transform = `translate(${t2.x}px, ${t2.y}px)rotate(${t2.k_angle}deg)`;
+	t2.svg_t.style.transform = `translate(${t2.x}px, ${t2.y}px) rotate(${t2.k_angle}deg)`;
 	t2.svg_hp.style.transform = `translate(${t2.x}px, ${t2.y-30}px)`; 
 	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
 	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
@@ -895,6 +927,13 @@ function updateAnts() {
 		bombToDelete.svg.style.transform = `translate(${bomb.x}px, ${bomb.y}px)`;//прячем за пределы экрана
 	});
 	
+	//взрыв танка
+	if (t1.hp <= 0 && t1.prevHp > 0) { 
+		triggerTankExplosion(t1);
+	}
+	t1.prevHp = t1.hp;
+
+
 	t1.bText.textContent = t1BombsPool.filter((bomb) => bomb.flying === false && bomb.exploding === false).length.toString();
 	t2.bText.textContent = t2BombsPool.filter((bomb) => bomb.flying === false && bomb.exploding === false).length.toString();
 	t1.hpText.textContent = t1.hp;
