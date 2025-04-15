@@ -638,13 +638,15 @@ function triggerTankExplosion(element) {
 	const circles = tankExplosionSVG.querySelectorAll('.particles');//ищем по названию класса
 	//console.log(`circles.length: ${circles.length}`);
 	circles.forEach((circle, index) => {
-		const randomX = (Math.random() - 0.5)*2*100;//+- 100
-		const randomY = (Math.random() - 0.5)*2*100;//+- 100
-		const randomA = (Math.random() - 0.5)*2*360;//+- 360
+		const randomDistance = Math.random()*100;//0-100
+		const randomAngle = Math.random()*360;//0-360
+		const randomX = Math.cos(randomAngle)*randomDistance;
+		const randomY = Math.sin(randomAngle)*randomDistance;
+		const randomRotation = (Math.random() - 0.5)*2*360;//+- 360
 		const animation = circle.animate([
 		{ transform: 'translate(0, 0) scale(1)', opacity: 1 },
-		{ transform: `translate(${randomX/5}px, ${randomY/5}px) rotate(${randomA/5}deg) scale(2)`, offset: 0.2}, //offset указывает на каком проценте анимации должен быть достигнут ключевой кадр.
-		{ transform: `translate(${randomX}px, ${randomY}px) rotate(${randomA}deg) scale(0.5)`, opacity: 0.7, filter: 'brightness(5)' }
+		{ transform: `translate(${randomX/5}px, ${randomY/5}px) rotate(${randomRotation/5}deg) scale(2)`, offset: 0.2}, //offset указывает на каком проценте анимации должен быть достигнут ключевой кадр.
+		{ transform: `translate(${randomX}px, ${randomY}px) rotate(${randomRotation}deg) scale(0.5)`, opacity: 0.7, filter: 'brightness(5)' }
 		], {
 		duration: 1500,//длительность анимации (милисекунд)
 		easing: 'ease-out',//определяет скорость течения анимации (вначале быстро, в конце медленно)
