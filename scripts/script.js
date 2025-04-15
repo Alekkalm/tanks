@@ -638,14 +638,17 @@ function triggerTankExplosion(element) {
 	const circles = tankExplosionSVG.querySelectorAll('.particles');//ищем по названию класса
 	//console.log(`circles.length: ${circles.length}`);
 	circles.forEach((circle, index) => {
+		const randomX = (Math.random() - 0.5)*2*100;//+- 100
+		const randomY = (Math.random() - 0.5)*2*100;//+- 100
+		const randomA = (Math.random() - 0.5)*2*360;//+- 360
 		const animation = circle.animate([
 		{ transform: 'translate(0, 0) scale(1)', opacity: 1 },
-		{ transform: 'scale(1.5)'},
-		{ transform: `translate(${(Math.random()-0.5)*2*100}px, ${(Math.random()-0.5)*2*100}px) rotate(${360}deg) scale(0.5)`, opacity: 0.5, filter: 'brightness(5)' }
+		{ transform: `translate(${randomX/5}px, ${randomY/5}px) rotate(${randomA/5}deg) scale(2)`, offset: 0.2}, //offset указывает на каком проценте анимации должен быть достигнут ключевой кадр.
+		{ transform: `translate(${randomX}px, ${randomY}px) rotate(${randomA}deg) scale(0.5)`, opacity: 0.7, filter: 'brightness(5)' }
 		], {
-		duration: 1500,
-		easing: 'ease-out',
-		fill: 'forwards'
+		duration: 1500,//длительность анимации (милисекунд)
+		easing: 'ease-out',//определяет скорость течения анимации (вначале быстро, в конце медленно)
+		fill: 'forwards'//после анимации объект будет иметь стили последнего кадра
 		});
 
 		//bomb.style.opacity = 0;
