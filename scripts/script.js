@@ -23,11 +23,13 @@ const codeMaxDT = document.getElementById('codeMaxDT');
 const t1HP = document.getElementById('t1HP');
 const t2HP = document.getElementById('t2HP');
 const gameStatusDOMElement = document.getElementById('gameStatus');
-let gameStatus = "идет игра";
+let gameStatus = "идет игра";//завершение игры, бой закончен!.
 const gameTimeDOMElement = document.getElementById('gameTime');
-const startTime = performance.now(); // Фиксируем время загрузки страницы
+let startTime = performance.now(); // Фиксируем время загрузки страницы
 let gameTime = 0;
-
+const gameEndingTimeDOMElement = document.getElementById('gameEndingTime');
+let startGameEndingTime = 0; 
+let gameEndingTime = 0;
 
 
 //танки
@@ -62,6 +64,8 @@ const t1 = {
 	prevHp: 150,//предыдущий hp. чтобы обнаружить фронт
 	hpText: svg_t1hp.querySelector('.hp'),//svg_t1.querySelector('.hp'),//текст health Point
 	exploding: false,
+	destroyedFront: false,
+	destroyed: false,
 	};
 //получаем второй танк
 const svg_t2 = document.getElementById('t2'); 
@@ -93,6 +97,8 @@ const t2 = {
 	prevHp: 150,//предыдущий hp. чтобы обнаружить фронт
 	hpText: svg_t2hp.querySelector('.hp'),//svg_t2.querySelector('.hp'),//текст health Point
 	exploding: false,
+	destroyedFront: false,
+	destroyed: false,
   };
 
   const tanks = [];
@@ -940,16 +946,31 @@ function updateAnts() {
 	});
 	
 	//взрыв танка
-	if (t1.hp <= 0 && t1.prevHp > 0) { 
+	t1.destroyedFront = false;
+	if (t1.hp <= 0 && t1.prevHp > 0) {
+		t1.destroyedFront = true; 
 		triggerTankExplosion(t1);
 	}
 	t1.prevHp = t1.hp;
 
+	t2.destroyedFront = false;
 	if (t2.hp <= 0 && t2.prevHp > 0) { 
+		t2.destroyedFront = true; 
 		triggerTankExplosion(t2);
 	}
 	t2.prevHp = t2.hp;
 
+	t1.destroyed = t1.hp <= 0;
+	t2.destroyed = t2.hp <= 0;
+
+	//завершение игры
+	if((t1.destroyedFront || t2.destroyedFront) && gameStatus != "завершение игры"){
+		gameStatus = "завершение игры"; //по фронту, чтобы когда игра закончилась, эта строка не затирала статус "игра окончена"
+		startGameEndingTime = performance.now();
+	} 
+	if(gameStatus == "завершение игры" && gameEndingTime >= 10){
+		gameStatus = "бой закончен!"
+	}
 
 	t1.bText.textContent = t1BombsPool.filter((bomb) => bomb.flying === false && bomb.exploding === false).length.toString();
 	t2.bText.textContent = t2BombsPool.filter((bomb) => bomb.flying === false && bomb.exploding === false).length.toString();
@@ -958,8 +979,15 @@ function updateAnts() {
 	t1HP.textContent = t1.hp;
 	t2HP.textContent = t2.hp;
 	gameStatusDOMElement.textContent = gameStatus;
+	//отсчет времени игры
     gameTime = (performance.now() - startTime) / 1000; // Переводим в секунды
     gameTimeDOMElement.textContent = gameTime.toFixed(0) + ' сек';
+	//отсчет времени завершения игры
+	if(gameStatus == "завершение игры") {
+		gameEndingTime = (performance.now() - startGameEndingTime) / 1000; // Переводим в секунды
+	}
+    gameEndingTimeDOMElement.textContent = gameEndingTime.toFixed(0) + ' сек';
+
 	//bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${flyingBombs.length}`;
 	//frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
 	const codeDelta = performance.now() - lastTimeCode;
