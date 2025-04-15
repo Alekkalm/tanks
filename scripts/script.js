@@ -22,10 +22,11 @@ const codeMaxDT = document.getElementById('codeMaxDT');
 //const frameNText = document.getElementById('frameN'); 
 const t1HP = document.getElementById('t1HP');
 const t2HP = document.getElementById('t2HP');
-
-
-
-
+const gameStatusDOMElement = document.getElementById('gameStatus');
+let gameStatus = "идет игра";
+const gameTimeDOMElement = document.getElementById('gameTime');
+const startTime = performance.now(); // Фиксируем время загрузки страницы
+let gameTime = 0;
 
 
 
@@ -956,6 +957,9 @@ function updateAnts() {
 	t2.hpText.textContent = t2.hp;
 	t1HP.textContent = t1.hp;
 	t2HP.textContent = t2.hp;
+	gameStatusDOMElement.textContent = gameStatus;
+    gameTime = (performance.now() - startTime) / 1000; // Переводим в секунды
+    gameTimeDOMElement.textContent = gameTime.toFixed(0) + ' сек';
 	//bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${flyingBombs.length}`;
 	//frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
 	const codeDelta = performance.now() - lastTimeCode;
