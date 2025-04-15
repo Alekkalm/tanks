@@ -99,8 +99,10 @@ const t2 = {
   tanks.push(t2);
 
 //взрыв от танка
-const tankExplosionSVG = document.getElementById('tankExplosion');
-	tankExplosionSVG.style.transform = `translate(-200px, 0px)`;//прячем за пределы экрана
+const tank1ExplosionSVG = document.getElementById('tank1Explosion');
+	tank1ExplosionSVG.style.transform = `translate(-200px, 0px)`;//прячем за пределы экрана
+const tank2ExplosionSVG = document.getElementById('tank2Explosion');
+	tank2ExplosionSVG.style.transform = `translate(-200px, 0px)`;//прячем за пределы экрана
 
   //снаряды
   function fillBombsPool(bombsPool, bombsNum){
@@ -634,6 +636,10 @@ function triggerExplosion(element) {
 
 function triggerTankExplosion(element) {
 	//const tankExplosionSVG = document.getElementById('tankExplosion');
+	let tankExplosionSVG;
+	if(element == t1) tankExplosionSVG = tank1ExplosionSVG;
+	else tankExplosionSVG = tank2ExplosionSVG;
+
 	tankExplosionSVG.style.transform = `translate(${element.x + element.center.x - 100}px, ${element.y + element.center.y - 100}px)`;//100,100 - это центр картинки explosion 
 	const circles = tankExplosionSVG.querySelectorAll('.particles');//ищем по названию класса
 	//console.log(`circles.length: ${circles.length}`);
@@ -937,6 +943,11 @@ function updateAnts() {
 		triggerTankExplosion(t1);
 	}
 	t1.prevHp = t1.hp;
+
+	if (t2.hp <= 0 && t2.prevHp > 0) { 
+		triggerTankExplosion(t2);
+	}
+	t2.prevHp = t2.hp;
 
 
 	t1.bText.textContent = t1BombsPool.filter((bomb) => bomb.flying === false && bomb.exploding === false).length.toString();
