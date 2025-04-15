@@ -987,9 +987,13 @@ function updateAnts() {
 	t1HP.textContent = t1.hp;
 	t2HP.textContent = t2.hp;
 	gameStatusDOMElement.textContent = gameStatus;
+	
 	//отсчет времени игры
-    gameTime = (performance.now() - startTime) / 1000; // Переводим в секунды
+	if(gameStatus != "бой закончен!"){
+    	gameTime = (performance.now() - startTime) / 1000; // Переводим в секунды
+	}
     gameTimeDOMElement.textContent = gameTime.toFixed(0) + ' сек';
+
 	//отсчет времени завершения игры
 	if(gameStatus == "завершение игры") {
 		gameEndingTime = (performance.now() - startGameEndingTime) / 1000; // Переводим в секунды
