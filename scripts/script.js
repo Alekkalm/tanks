@@ -20,8 +20,8 @@ const codeMaxDT = document.getElementById('codeMaxDT');
 //const frameDropNText = document.getElementById('frameDropN'); 
 //let frameN = 0;
 //const frameNText = document.getElementById('frameN'); 
-
- 
+const t1HP = document.getElementById('t1HP');
+const t2HP = document.getElementById('t2HP');
 
 
 
@@ -954,6 +954,8 @@ function updateAnts() {
 	t2.bText.textContent = t2BombsPool.filter((bomb) => bomb.flying === false && bomb.exploding === false).length.toString();
 	t1.hpText.textContent = t1.hp;
 	t2.hpText.textContent = t2.hp;
+	t1HP.textContent = t1.hp;
+	t2HP.textContent = t2.hp;
 	//bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${flyingBombs.length}`;
 	//frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
 	const codeDelta = performance.now() - lastTimeCode;
