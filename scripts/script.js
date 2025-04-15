@@ -639,9 +639,9 @@ function triggerTankExplosion(element) {
 	//console.log(`circles.length: ${circles.length}`);
 	circles.forEach((circle, index) => {
 		const animation = circle.animate([
-		{ transform: 'translate(0, 0)', opacity: 1 },
-
-		{ transform: `translate(${(Math.random()-0.5)*2*100}px, ${(Math.random()-0.5)*2*100}px) rotate(${0}deg)`, opacity: 0.5, filter: 'brightness(5)' }
+		{ transform: 'translate(0, 0) scale(1)', opacity: 1 },
+		{ transform: 'scale(1.5)'},
+		{ transform: `translate(${(Math.random()-0.5)*2*100}px, ${(Math.random()-0.5)*2*100}px) rotate(${360}deg) scale(0.5)`, opacity: 0.5, filter: 'brightness(5)' }
 		], {
 		duration: 1500,
 		easing: 'ease-out',
