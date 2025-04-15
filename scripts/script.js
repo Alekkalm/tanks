@@ -14,12 +14,12 @@ const fpsMaxDT = document.getElementById('fpsMaxDT');
 const codeMaxDT = document.getElementById('codeMaxDT');
 
 //дисплей отладочной информации
-const bombsOnDisplayNText = document.getElementById('bombsOnDisplayN');
-let frameDropN = 0;
-let updateFunctionIsBusy = false;
-const frameDropNText = document.getElementById('frameDropN'); 
-let frameN = 0;
-const frameNText = document.getElementById('frameN'); 
+//const bombsOnDisplayNText = document.getElementById('bombsOnDisplayN');
+//let frameDropN = 0;
+//let updateFunctionIsBusy = false;
+//const frameDropNText = document.getElementById('frameDropN'); 
+//let frameN = 0;
+//const frameNText = document.getElementById('frameN'); 
 
  
 
@@ -672,14 +672,14 @@ function triggerTankExplosion(element) {
 
 function updateAnts() {
 	
-	if(updateFunctionIsBusy){ //если функция работает, а мы её еще раз вызвали, то выходим. (проверка, вдруг не успевает выполниться за один кадр а уже пора выполняться для следующего кадра).
-		frameDropN += 1; //количество пропущеных кадров (для отображения).
-		return;
-	}
-	updateFunctionIsBusy = true; //ставим признак что функция еще работает
-	frameN += 1;//счетчик кадров отрисованых
+	// if(updateFunctionIsBusy){ //если функция работает, а мы её еще раз вызвали, то выходим. (проверка, вдруг не успевает выполниться за один кадр а уже пора выполняться для следующего кадра).
+	// 	frameDropN += 1; //количество пропущеных кадров (для отображения).
+	// 	return;
+	// }
+	//updateFunctionIsBusy = true; //ставим признак что функция еще работает
+	//frameN += 1;//счетчик кадров отрисованых
 	let lastTimeCode = performance.now();
-	frameNText.textContent = `кадр: ${frameN}`;
+	//frameNText.textContent = `кадр: ${frameN}`;
 	
 	//FPS
 	//-----------
@@ -954,8 +954,8 @@ function updateAnts() {
 	t2.bText.textContent = t2BombsPool.filter((bomb) => bomb.flying === false && bomb.exploding === false).length.toString();
 	t1.hpText.textContent = t1.hp;
 	t2.hpText.textContent = t2.hp;
-	bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${flyingBombs.length}`;
-	frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
+	//bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${flyingBombs.length}`;
+	//frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
 	const codeDelta = performance.now() - lastTimeCode;
 	codeDT.textContent = `код дельта Т: ${codeDelta}`;
 	if(codeMaxDelta < codeDelta){
@@ -963,7 +963,7 @@ function updateAnts() {
 		codeMaxDT.textContent = `код макс.дельта Т: ${codeMaxDelta}`;
 	}
   requestAnimationFrame(updateAnts);
-  updateFunctionIsBusy = false; //сбрасываем признак что функция работает
+  //updateFunctionIsBusy = false; //сбрасываем признак что функция работает
 }
 
 updateAnts();
