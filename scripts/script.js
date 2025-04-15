@@ -788,95 +788,98 @@ function updateAnts() {
 
 	//танки
 	//T1
-	if(T1bLeft_pressed) t1.b_angle -= 1;
-	if(T1bRight_pressed) t1.b_angle += 1;
-	t1.k_angleSpeed = 0;
-	if(T1Left_pressed) t1.k_angleSpeed = -1; //через скорость а не напрямую, чтобы при коллизиях можно было вернуть обратно
-	if(T1Right_pressed) t1.k_angleSpeed = 1;
-	t1.speed = 0;
-	if(T1Forward_pressed){
-		t1.speed = 1;
-	}
-	if(T1Backward_pressed){
-		t1.speed = -1;
-	}
-	//фронт нажатия
-	T1Fire_pressed_front = (!T1Fire_pressed_previous && T1Fire_pressed) ? true : false;
-	T1Fire_pressed_previous = T1Fire_pressed;
-	//выстрел
-	if(T1Fire_pressed){
-		//cloneBomb();
-		shot(t1,t1BombsPool);
-	}
+	if(t1.destroyed==false && gameStatus != "бой закончен!"){
 
-	//повторно используем dx и dy теперь для танков
-	t1.k_angle += t1.k_angleSpeed;
+		if(T1bLeft_pressed) t1.b_angle -= 1;
+		if(T1bRight_pressed) t1.b_angle += 1;
+		t1.k_angleSpeed = 0;
+		if(T1Left_pressed) t1.k_angleSpeed = -1; //через скорость а не напрямую, чтобы при коллизиях можно было вернуть обратно
+		if(T1Right_pressed) t1.k_angleSpeed = 1;
+		t1.speed = 0;
+		if(T1Forward_pressed){
+			t1.speed = 1;
+		}
+		if(T1Backward_pressed){
+			t1.speed = -1;
+		}
+		//фронт нажатия
+		T1Fire_pressed_front = (!T1Fire_pressed_previous && T1Fire_pressed) ? true : false;
+		T1Fire_pressed_previous = T1Fire_pressed;
+		//выстрел
+		if(T1Fire_pressed){
+			//cloneBomb();
+			shot(t1,t1BombsPool);
+		}
 
-	let dx = Math.cos(t1.k_angle * Math.PI / 180) * t1.speed;
-	let dy = Math.sin(t1.k_angle * Math.PI / 180) * t1.speed;
-	
-	t1.x += dx;
-	t1.y += dy;
-	recalcBoundingBox(t1);
-	if(t1collision()){
-		t1.x -= dx;
-    	t1.y -= dy;
-		t1.k_angle -= t1.k_angleSpeed;
+		//повторно используем dx и dy теперь для танков
+		t1.k_angle += t1.k_angleSpeed;
+
+		let dx = Math.cos(t1.k_angle * Math.PI / 180) * t1.speed;
+		let dy = Math.sin(t1.k_angle * Math.PI / 180) * t1.speed;
+		
+		t1.x += dx;
+		t1.y += dy;
 		recalcBoundingBox(t1);
+		if(t1collision()){
+			t1.x -= dx;
+			t1.y -= dy;
+			t1.k_angle -= t1.k_angleSpeed;
+			recalcBoundingBox(t1);
+		}
+		t1.svg_t.style.transform = `translate(${t1.x}px, ${t1.y}px) rotate(${t1.k_angle}deg)`;
+		t1.svg_hp.style.transform = `translate(${t1.x}px, ${t1.y-30}px)`; 
+		//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
+		//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
+		t1.svg_tb.style.transform = `translate(35px, 35px) rotate(${t1.b_angle}deg) translate(-35px, -35px)`;
+		//t1.kRect = t1.svg_tk.getBoundingClientRect(); //после перемещения, пересчитываем BoundingRectangle корпуса танка
 	}
-	t1.svg_t.style.transform = `translate(${t1.x}px, ${t1.y}px) rotate(${t1.k_angle}deg)`;
-	t1.svg_hp.style.transform = `translate(${t1.x}px, ${t1.y-30}px)`; 
-	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
-	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
-	t1.svg_tb.style.transform = `translate(35px, 35px) rotate(${t1.b_angle}deg) translate(-35px, -35px)`;
-	//t1.kRect = t1.svg_tk.getBoundingClientRect(); //после перемещения, пересчитываем BoundingRectangle корпуса танка
-	
 	
 	
 	//Т2
-	if(T2bLeft_pressed) t2.b_angle -= 1;
-	if(T2bRight_pressed) t2.b_angle += 1;
-	t2.k_angleSpeed = 0;
-	if(T2Left_pressed) t2.k_angleSpeed = -1;
-	if(T2Right_pressed) t2.k_angleSpeed = 1;
-	t2.speed = 0;
-	if(T2Forward_pressed){
-		t2.speed = 1;
-	}
-	if(T2Backward_pressed){
-		t2.speed = -1;
-	}
-	//фронт нажатия
-	T2Fire_pressed_front = (!T2Fire_pressed_previous && T2Fire_pressed) ? true : false;
-	T2Fire_pressed_previous = T2Fire_pressed;
-	//выстрел
-	if(T2Fire_pressed){
-		//cloneBomb();
-		shot(t2, t2BombsPool);
-	}
+	if(t2.destroyed==false && gameStatus != "бой закончен!"){
 
-	//повторно используем dx и dy теперь для танков
-	t2.k_angle += t2.k_angleSpeed;
+		if(T2bLeft_pressed) t2.b_angle -= 1;
+		if(T2bRight_pressed) t2.b_angle += 1;
+		t2.k_angleSpeed = 0;
+		if(T2Left_pressed) t2.k_angleSpeed = -1;
+		if(T2Right_pressed) t2.k_angleSpeed = 1;
+		t2.speed = 0;
+		if(T2Forward_pressed){
+			t2.speed = 1;
+		}
+		if(T2Backward_pressed){
+			t2.speed = -1;
+		}
+		//фронт нажатия
+		T2Fire_pressed_front = (!T2Fire_pressed_previous && T2Fire_pressed) ? true : false;
+		T2Fire_pressed_previous = T2Fire_pressed;
+		//выстрел
+		if(T2Fire_pressed){
+			//cloneBomb();
+			shot(t2, t2BombsPool);
+		}
 
-	dx = Math.cos(t2.k_angle * Math.PI / 180) * t2.speed;
-    dy = Math.sin(t2.k_angle * Math.PI / 180) * t2.speed;
-	
-	t2.x += dx;
-    t2.y += dy;
-	recalcBoundingBox(t2);
-	if(t2collision()){
-		t2.x -= dx;
-    	t2.y -= dy;
-		t2.k_angle -= t2.k_angleSpeed;
+		t2.k_angle += t2.k_angleSpeed;
+
+		let dx = Math.cos(t2.k_angle * Math.PI / 180) * t2.speed;
+		let dy = Math.sin(t2.k_angle * Math.PI / 180) * t2.speed;
+		
+		t2.x += dx;
+		t2.y += dy;
 		recalcBoundingBox(t2);
+		if(t2collision()){
+			t2.x -= dx;
+			t2.y -= dy;
+			t2.k_angle -= t2.k_angleSpeed;
+			recalcBoundingBox(t2);
+		}
+		t2.svg_t.style.transform = `translate(${t2.x}px, ${t2.y}px) rotate(${t2.k_angle}deg)`;
+		t2.svg_hp.style.transform = `translate(${t2.x}px, ${t2.y-30}px)`; 
+		//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
+		//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
+		t2.svg_tb.style.transform = `translate(35px, 35px) rotate(${t2.b_angle}deg) translate(-35px, -35px)`;
+		//t2.kRect = t2.svg_tk.getBoundingClientRect();//после перемещения, пересчитываем BoundingRectangle корпуса танка
 	}
-	t2.svg_t.style.transform = `translate(${t2.x}px, ${t2.y}px) rotate(${t2.k_angle}deg)`;
-	t2.svg_hp.style.transform = `translate(${t2.x}px, ${t2.y-30}px)`; 
-	//здесь 35 и 25 - расстояние до центра башни относительно левого верхнего угла корпуса (родительского svg).
-	//(20 - смещение по x, плюс 15 до центра башни; 10 - смещение по y, плюс 15 до центра башни)
-	t2.svg_tb.style.transform = `translate(35px, 35px) rotate(${t2.b_angle}deg) translate(-35px, -35px)`;
-	//t2.kRect = t2.svg_tk.getBoundingClientRect();//после перемещения, пересчитываем BoundingRectangle корпуса танка
-	
 
 	//снаряды
 	const bombsToDelete = [];
