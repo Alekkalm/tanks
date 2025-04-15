@@ -973,6 +973,11 @@ function updateAnts() {
 	} 
 	if(gameStatus == "завершение игры" && gameEndingTime >= 10){
 		gameStatus = "бой закончен!"
+		let alertString="";
+		if(t1.destroyed==true && t2.destroyed==false) alertString = "Победил Танк2 !!!";
+		if(t1.destroyed==false && t2.destroyed==true) alertString = "Победил Танк1 !!!";
+		if(t1.destroyed==true && t2.destroyed==true) alertString = "Ничья.";
+		alert(alertString);
 	}
 
 	t1.bText.textContent = t1BombsPool.filter((bomb) => bomb.flying === false && bomb.exploding === false).length.toString();
