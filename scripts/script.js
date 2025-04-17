@@ -106,10 +106,24 @@ const t2 = {
   tanks.push(t2);
 
 //взрыв от танка
+function cloneParicles(svg){
+	const particleTemplate = svg.getElementById('particleTemplate'); // Находим шаблон
+	for (let i = 0; i < 49; i++) {
+		const particlePolygon = particleTemplate.cloneNode(true); // Клонируем шаблон
+		particlePolygon.removeAttribute('id'); // Убираем id, чтобы не было дубликатов
+		svg.appendChild(particlePolygon); 
+	}
+}
+
 const tank1ExplosionSVG = document.getElementById('tank1Explosion');
-	tank1ExplosionSVG.style.transform = `translate(-200px, 0px)`;//прячем за пределы экрана
+cloneParicles(tank1ExplosionSVG);
+tank1ExplosionSVG.style.transform = `translate(-200px, 0px)`;//прячем за пределы экрана
+
 const tank2ExplosionSVG = document.getElementById('tank2Explosion');
-	tank2ExplosionSVG.style.transform = `translate(-200px, 0px)`;//прячем за пределы экрана
+cloneParicles(tank2ExplosionSVG);
+tank2ExplosionSVG.style.transform = `translate(-200px, 0px)`;//прячем за пределы экрана
+
+
 
   //снаряды
   function fillBombsPool(bombsPool, bombsNum){
