@@ -673,7 +673,7 @@ function triggerTankExplosion(element) {
 		const animation = circle.animate([
 		{ transform: 'translate(0, 0) scale(1)', opacity: 1 },
 		{ transform: `translate(${randomX/5}px, ${randomY/5}px) rotate(${randomRotation/5}deg) scale(2)`, offset: 0.2}, //offset указывает на каком проценте анимации должен быть достигнут ключевой кадр.
-		{ transform: `translate(${randomX}px, ${randomY}px) rotate(${randomRotation}deg) scale(0.5)`, opacity: 0.7, filter: 'brightness(5)' }
+		{ transform: `translate(${randomX}px, ${randomY}px) rotate(${randomRotation}deg) scale(0.5)`, opacity: 0.7}
 		], {
 		duration: 1500,//длительность анимации (милисекунд)
 		easing: 'ease-out',//определяет скорость течения анимации (вначале быстро, в конце медленно)
