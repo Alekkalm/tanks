@@ -166,8 +166,8 @@ const BombsPool = [...t1BombsPool, ...t2BombsPool];
 	  //document.body.appendChild(wallSVG);
 	  document.body.insertBefore(wallSVG, svg_t1); // Добавляем ПЕРЕД(порядок отрисовки) танком t1 (чтобы тексты танка были всегда видны, даже если наехали на стену)
 	  
-	  const x = Math.random() * (window.innerWidth - 30 - 200) + 100; // -200) + 100   это уменьшил диапазон на размер двух танков по диаганали (примерно 100 на танк),
-	  const y = Math.random() * (window.innerHeight - 30 -200) + 100; // и сдвинул вправо на 100, чтобы симетрично по бокам осталось место 
+	  const x = Math.random() * (window.innerWidth - 30 - 200) + 100; //30 - ширина стены, 200 - два танка по диагонали, 100 - один танк по диагонали (чтобы мог развернуться)
+	  const y = Math.random() * (window.innerHeight - 30- 50) + 50; //50 - место для текстов вверху.
 	  wallSVG.style.transform = `translate(${x}px, ${y}px)`;
 	  walls.push({
 		svg: wallSVG,
