@@ -694,10 +694,10 @@ function updateAnts() {
 	const OneSecDelta = now - lastTimeOneSec; // Время, прошедшее с последнего кадра
 	
 	const delta = now - lastTime; // Время, прошедшее с последнего кадра
-	fpsDT.textContent = `FPS дельта Т: ${delta}`;
+	fpsDT.textContent = `FPS дельта Т: ${delta.toFixed(2)}`;
 	if(fpsMaxDelta < delta) {
 		fpsMaxDelta = delta;
-		fpsMaxDT.textContent = `FPS макс.дельта Т: ${fpsMaxDelta}`;
+		fpsMaxDT.textContent = `FPS макс.дельта Т: ${fpsMaxDelta.toFixed(2)}`;
 	}
 
 
@@ -1003,10 +1003,10 @@ function updateAnts() {
 	//bombsOnDisplayNText.textContent = `количество снарядов на дисплее: ${flyingBombs.length}`;
 	//frameDropNText.textContent = `пропущено кадров: ${frameDropN}`; 
 	const codeDelta = performance.now() - lastTimeCode;
-	codeDT.textContent = `код дельта Т: ${codeDelta}`;
+	codeDT.textContent = `код дельта Т: ${codeDelta.toFixed(2)}`;
 	if(codeMaxDelta < codeDelta){
 		codeMaxDelta = codeDelta;
-		codeMaxDT.textContent = `код макс.дельта Т: ${codeMaxDelta}`;
+		codeMaxDT.textContent = `код макс.дельта Т: ${codeMaxDelta.toFixed(2)}`;
 	}
   requestAnimationFrame(updateAnts);
   //updateFunctionIsBusy = false; //сбрасываем признак что функция работает
