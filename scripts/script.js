@@ -203,6 +203,14 @@ function showWinPopup(titleString, noticeString) {
  	overlay.querySelector('.win-title').textContent = `${titleString}`;
 	overlay.querySelector('.win-notice').textContent = `${noticeString}`;
 
+	// Запускаем конфетти
+    confetti({
+		particleCount: 150,
+		spread: 70,
+		origin: { y: 0.6 },
+		zIndex: 1001
+	  });
+
 	// Проигрываем звук победы
     //const winSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3');
 	const winSound = new Audio('mixkit-cheering-crowd-loud-whistle-610.wav');
