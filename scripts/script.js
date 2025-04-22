@@ -661,7 +661,10 @@ function t2collision(){
 // }
 
 
-
+const bombToTankSound = new Audio('mixkit-hitting-metal-armor-2775.wav');
+const bombToPerimetrSound = new Audio('mixkit-sword-pierces-armor-2761.wav');
+const tankToTankSound = new Audio('mixkit-knife-fast-hit-2184.wav');
+const tankExplosionSound = new Audio('mixkit-explosion-with-rocks-debris-1703.wav');
 
 function triggerExplosion(element) {
 	const bomb = element.svg.querySelector('.bomb');//ищем по названию класса
@@ -885,6 +888,7 @@ function updateAnts() {
 		t1.y += dy;
 		recalcBoundingBox(t1);
 		if(t1collision()){
+			tankToTankSound.play(); //наезд на периметр, стену, другой танк
 			t1.x -= dx;
 			t1.y -= dy;
 			t1.k_angle -= t1.k_angleSpeed;
@@ -932,6 +936,7 @@ function updateAnts() {
 		t2.y += dy;
 		recalcBoundingBox(t2);
 		if(t2collision()){
+			tankToTankSound.play(); //наезд на периметр, стену, другой танк
 			t2.x -= dx;
 			t2.y -= dy;
 			t2.k_angle -= t2.k_angleSpeed;
@@ -964,11 +969,13 @@ function updateAnts() {
 		//с краями экрана
 		if (bomb.x < 0 || bomb.x > window.innerWidth - 10 || bomb.y < 0 || bomb.y > window.innerHeight - 10) { //размер снаряда 10 на 10.
 			bombsToDelete.push(bomb);
+			bombToPerimetrSound.play();
 		}
 		//с блоками стен
 		walls.forEach((wall, index) => {
 			if (rectCollision(bomb, wall)) { 
 				bombsToDelete.push(bomb);
+				bombToPerimetrSound.play();
 			}
 		})
 	
@@ -994,12 +1001,14 @@ function updateAnts() {
 			if (bombTankCollision(bomb, t2)) { 
 				bombsToDelete.push(bomb);
 				t2.hp -=1;
+				bombToTankSound.play();
 			}
 	});
 	t2flyingBombs.forEach((bomb, index) => {
 			if (bombTankCollision(bomb, t1)) { 
 				bombsToDelete.push(bomb);
 				t1.hp -=1;
+				bombToTankSound.play();
 			}
 	});	
 
@@ -1015,7 +1024,8 @@ function updateAnts() {
 	//взрыв танка
 	t1.destroyedFront = false;
 	if (t1.hp <= 0 && t1.prevHp > 0) {
-		t1.destroyedFront = true; 
+		t1.destroyedFront = true;
+		tankExplosionSound.play(); 
 		triggerTankExplosion(t1);
 	}
 	t1.prevHp = t1.hp;
@@ -1023,6 +1033,7 @@ function updateAnts() {
 	t2.destroyedFront = false;
 	if (t2.hp <= 0 && t2.prevHp > 0) { 
 		t2.destroyedFront = true; 
+		tankExplosionSound.play();
 		triggerTankExplosion(t2);
 	}
 	t2.prevHp = t2.hp;
