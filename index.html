@@ -132,6 +132,38 @@
 			<polygon class="particles" points="100,100 110,100 110,110 100,110 100,100" fill="darkgrey" stroke="black" stroke-width="1" opacity="0" style="transform-origin: center; transform-box: fill-box;"/>
 			<polygon class="particles" points="100,100 110,100 110,110 100,110 100,100" fill="darkgrey" stroke="black" stroke-width="1" opacity="0" style="transform-origin: center; transform-box: fill-box;"/>
 		  </svg>
+			<!-- Окно "Победа!" -->
+		  <div id="winOverlay" class="win-overlay" style="  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+															background: rgba(0,0,0,0.7);
+															display: flex;
+															justify-content: center;
+															align-items: center;
+															z-index: 1000;
+															opacity: 0;
+															transition: opacity 0.3s;">
+			<div class="win-popup" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+											padding: 30px;
+											border-radius: 15px;
+											text-align: center;
+											box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+											transform: scale(0.8);
+											transition: transform 0.3s;">
+			  <h1 class="win-title" style="font-size: 2.5em;
+											color: #4a6baf;
+											margin-bottom: 20px;
+											text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">ПОБЕДА!</h1>
+			  <!-- <p>Вы успешно завершили игру!</p> -->
+			  <button id="winCloseBtn" class="win-button" style="background: #4CAF50;
+																color: white;
+																border: none;
+																padding: 12px 25px;
+																font-size: 1.1em;
+																border-radius: 50px;
+																cursor: pointer;
+																transition: all 0.3s;">Закрыть</button>
+			</div>
+		  </div>
+
 		<script src="scripts/script.js"></script>
 	</body>
 </html>
