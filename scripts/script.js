@@ -466,7 +466,7 @@ function shot(tank, bombsPool){
 		bomb.x = tank.x + 30 + dx; //+30 - это центр танка
 		bomb.y = tank.y + 30 + dy; //+30 - центр танка
 		bomb.angle = sumAngle;//bombAngle,
-		bomb.speed = 2;
+		bomb.speed = 8;
 		bomb.flying = true;
 		//bomb.svg.style.display = 'block'; // Делаем элемент видимым
 		const bombCircle = bomb.svg.querySelector('.bomb');//ищем по названию класса
@@ -873,7 +873,7 @@ function updateAnts() {
 		T1Fire_pressed_front = (!T1Fire_pressed_previous && T1Fire_pressed) ? true : false;
 		T1Fire_pressed_previous = T1Fire_pressed;
 		//выстрел
-		if(T1Fire_pressed){
+		if(T1Fire_pressed_front){
 			//cloneBomb();
 			shot(t1,t1BombsPool);
 		}
@@ -922,7 +922,7 @@ function updateAnts() {
 		T2Fire_pressed_front = (!T2Fire_pressed_previous && T2Fire_pressed) ? true : false;
 		T2Fire_pressed_previous = T2Fire_pressed;
 		//выстрел
-		if(T2Fire_pressed){
+		if(T2Fire_pressed_front){
 			//cloneBomb();
 			shot(t2, t2BombsPool);
 		}
@@ -1000,14 +1000,14 @@ function updateAnts() {
 	t1flyingBombs.forEach((bomb, index) => {
 			if (bombTankCollision(bomb, t2)) { 
 				bombsToDelete.push(bomb);
-				t2.hp -=1;
+				t2.hp -=20;
 				bombToTankSound.play();
 			}
 	});
 	t2flyingBombs.forEach((bomb, index) => {
 			if (bombTankCollision(bomb, t1)) { 
 				bombsToDelete.push(bomb);
-				t1.hp -=1;
+				t1.hp -=20;
 				bombToTankSound.play();
 			}
 	});	
