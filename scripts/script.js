@@ -439,6 +439,21 @@ function recalcBoundingBox(a){
 }
 
 
+// document.addEventListener('click', () => {
+//     const silentSound = new AudioContext();
+//     silentSound.close(); // "Разогреваем" аудио-систему
+// }, { once: true }); // Только при первом клике
+
+const shotSound = new Audio('mixkit-war-explosions-2773.wav');
+//shotSound.preload = 'auto';
+//shotSound.load();
+// // Проверяем, можно ли воспроизвести без задержки
+// shotSound.play().then(() => {
+//     shotSound.pause();
+//     shotSound.currentTime = 0;
+// }).catch(e => console.log("Предзагрузка звука:", e));
+
+
 
 
 function shot(tank, bombsPool){
@@ -460,6 +475,8 @@ function shot(tank, bombsPool){
 		bombCircle.style.opacity = 1;
 		bombText.style.opacity = 1;
 		//explosion.style.opacity = 0;
+		//shotSound.currentTime = 0; // Перематываем звук в начало
+		shotSound.play();
 	}
 }
 
