@@ -195,8 +195,39 @@ const BombsPool = [...t1BombsPool, ...t2BombsPool];
 	}
 
 
+//окно "Победа"
+function showWinPopup(messageString) {
+    const overlay = document.getElementById('winOverlay');
+    overlay.style.opacity = '1';
+    //overlay.querySelector('.win-popup').style.transform = 'scale(1)';
+    
+    // Блокируем прокрутку страницы
+    //document.body.style.overflow = 'hidden';
 
+	overlay.querySelector('.win-title').textContent = `${messageString}`;
 
+	// Проигрываем звук победы (опционально)
+    //const winSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3');
+	const winSound = new Audio('mixkit-cheering-crowd-loud-whistle-610.wav');
+    winSound.play();
+  }
+
+  function hideWinPopup() {
+    const overlay = document.getElementById('winOverlay');
+    overlay.style.opacity = '0';
+    //overlay.querySelector('.win-popup').style.transform = 'scale(0.8)';
+    
+    // Разблокируем прокрутку
+    //document.body.style.overflow = '';
+    
+    // Через 0.3s (длительность анимации) скрываем полностью
+    setTimeout(() => {
+      overlay.style.display = 'none';
+    }, 300);
+  }
+
+  // Вешаем обработчик на кнопку закрытия
+  document.getElementById('winCloseBtn').addEventListener('click', hideWinPopup);
 
 //муравьи
 //строка для получения SVG
@@ -991,7 +1022,8 @@ function updateAnts() {
 		if(t1.destroyed==true && t2.destroyed==false) alertString = "Победил Танк2 !!!";
 		if(t1.destroyed==false && t2.destroyed==true) alertString = "Победил Танк1 !!!";
 		if(t1.destroyed==true && t2.destroyed==true) alertString = "Ничья.";
-		alert(alertString);
+		//alert(alertString);
+		showWinPopup(alertString);
 	}
 
 	t1.bText.textContent = t1BombsPool.filter((bomb) => bomb.flying === false && bomb.exploding === false).length.toString();
