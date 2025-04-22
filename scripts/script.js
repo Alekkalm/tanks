@@ -196,17 +196,14 @@ const BombsPool = [...t1BombsPool, ...t2BombsPool];
 
 
 //окно "Победа"
-function showWinPopup(messageString) {
+function showWinPopup(titleString, noticeString) {
     const overlay = document.getElementById('winOverlay');
     overlay.style.opacity = '1';
     //overlay.querySelector('.win-popup').style.transform = 'scale(1)';
-    
-    // Блокируем прокрутку страницы
-    //document.body.style.overflow = 'hidden';
+ 	overlay.querySelector('.win-title').textContent = `${titleString}`;
+	overlay.querySelector('.win-notice').textContent = `${noticeString}`;
 
-	overlay.querySelector('.win-title').textContent = `${messageString}`;
-
-	// Проигрываем звук победы (опционально)
+	// Проигрываем звук победы
     //const winSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3');
 	const winSound = new Audio('mixkit-cheering-crowd-loud-whistle-610.wav');
     winSound.play();
@@ -216,11 +213,8 @@ function showWinPopup(messageString) {
     const overlay = document.getElementById('winOverlay');
     overlay.style.opacity = '0';
     //overlay.querySelector('.win-popup').style.transform = 'scale(0.8)';
-    
-    // Разблокируем прокрутку
-    //document.body.style.overflow = '';
-    
-    // Через 0.3s (длительность анимации) скрываем полностью
+
+     // Через 0.3s (длительность анимации) скрываем полностью
     setTimeout(() => {
       overlay.style.display = 'none';
     }, 300);
@@ -1018,12 +1012,21 @@ function updateAnts() {
 	} 
 	if(gameStatus == "завершение игры" && gameEndingTime >= 10){
 		gameStatus = "бой закончен!"
-		let alertString="";
-		if(t1.destroyed==true && t2.destroyed==false) alertString = "Победил Танк2 !!!";
-		if(t1.destroyed==false && t2.destroyed==true) alertString = "Победил Танк1 !!!";
-		if(t1.destroyed==true && t2.destroyed==true) alertString = "Ничья.";
+		let titleString="";
+		let noticeString="";
+		if(t1.destroyed==true && t2.destroyed==false){
+			titleString = "Победил Танк2 !!!";
+			noticeString = `с сохраненным HP: ${t2.hp.toFixed(0)}`;
+		} 
+		if(t1.destroyed==false && t2.destroyed==true){
+			titleString = "Победил Танк1 !!!";
+			noticeString = `с сохраненным HP: ${t1.hp.toFixed(0)}`;
+		} 
+		if(t1.destroyed==true && t2.destroyed==true){
+			titleString = "Ничья. )))";
+		} 
 		//alert(alertString);
-		showWinPopup(alertString);
+		showWinPopup(titleString, noticeString);
 	}
 
 	t1.bText.textContent = t1BombsPool.filter((bomb) => bomb.flying === false && bomb.exploding === false).length.toString();
