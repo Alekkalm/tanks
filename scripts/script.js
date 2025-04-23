@@ -665,9 +665,14 @@ const bombToTankSound = new Audio('sound/mixkit-hitting-metal-armor-2775.wav');
 const bombToPerimetrSound = new Audio('sound/mixkit-sword-pierces-armor-2761.wav');
 const tankToTankSound = new Audio('sound/mixkit-knife-fast-hit-2184.wav');
 const tankExplosionSound = new Audio('sound/mixkit-explosion-with-rocks-debris-1703.wav');
-const ambientSound = new Audio('sound/8-bit launge.mp3');
-ambientSound.loop = true;
-ambientSound.play();
+
+const backgroundMusic = new Audio('sound/8-bit launge.mp3');
+const volumeControl = document.getElementById('volumeControl');
+volumeControl.addEventListener('input', () => {
+	backgroundMusic.volume = volumeControl.value;
+  });
+backgroundMusic.loop = true;
+backgroundMusic.play();
 
 // Если браузер блокирует автоматическое воспроизведение аудио/видео на сайте, вы можете вручную дать разрешение. Вот как это сделать в популярных браузерах:
 
