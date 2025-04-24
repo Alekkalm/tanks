@@ -467,6 +467,7 @@ class SoundPool {
         for (let i = 0; i < poolSize; i++) {
             const audio = new Audio(src);
             audio.preload = 'auto';
+			audio.load();
             this.pool.push(audio);
         }
     }
@@ -487,6 +488,67 @@ class SoundPool {
         }
     }
 }
+
+
+//Пока это не будем использовать.
+//для отладки нужно запускать на локальном сервере (просто загрузка с жесткого диска блокируется политикой безопасности CORS) 
+//Создание/запуск аудиоконтекста разрешено только после взаимодействия с пользователем. (нужно подписаться на событие пользователя)
+class WebAudioSoundPool {
+    constructor(src, poolSize = 5, poolName = "not defined") {
+        this.pool = [];
+        this.src = src;
+		this.Name = poolName;
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.buffer = null;
+
+        this.loadSound();
+    }
+
+    async loadSound() {
+        const response = await fetch(this.src);
+        const arrayBuffer = await response.arrayBuffer();
+        this.buffer = await this.audioContext.decodeAudioData(arrayBuffer);
+        
+        // Создаём пул заранее
+        for (let i = 0; i < poolSize; i++) {
+            this.createAudioNode();
+        }
+    }
+
+    createAudioNode() {
+        const source = this.audioContext.createBufferSource();
+        source.buffer = this.buffer;
+        source.connect(this.audioContext.destination);
+        this.pool.push(source);
+    }
+
+    play() {
+        if (!this.buffer) return; // Звук ещё не загружен
+        
+        const availableSource = this.pool.find(source => source.playbackState !== 2); // 2 = PLAYING_STATE
+        
+        if (availableSource) {
+            availableSource.start(0);
+            // После завершения возвращаем в пул (можно оптимизировать)
+            availableSource.onended = () => {
+                this.pool.push(availableSource);
+            };
+        } else {
+            // Если все заняты, создаём новый (редкий случай)
+            const newSource = this.audioContext.createBufferSource();
+            newSource.buffer = this.buffer;
+            newSource.connect(this.audioContext.destination);
+            newSource.start(0);
+            this.pool.push(newSource);
+			console.log("увеличен пулл звуков ", this.Name, "длинна пула: ", this.pool.length);
+        }
+    }
+}
+// Использование
+//const laserSoundPool = new WebAudioSoundPool('laser.wav', 5);
+//laserSoundPool.play();
+
+
 
 //(при параллельной игре два играка легко делают пул звуков выстрела и промаха до 30 единиц на двоих)
 // Создаем пул звуков выстрела
