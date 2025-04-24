@@ -666,6 +666,8 @@ const bombToPerimetrSound = new Audio('sound/mixkit-sword-pierces-armor-2761.wav
 const tankToTankSound = new Audio('sound/mixkit-knife-fast-hit-2184.wav');
 const tankExplosionSound = new Audio('sound/mixkit-explosion-with-rocks-debris-1703.wav');
 
+//Фоновая музыка
+//------------------------------------------------------------
 const bgMusic = new Audio('sound/8-bit launge.mp3');
 const volumeControl = document.getElementById('volumeControl');
 volumeControl.value = 0.25;
@@ -674,29 +676,35 @@ volumeControl.addEventListener('input', () => {
 	bgMusic.volume = volumeControl.value;
   });
   bgMusic.loop = true;
-//bgMusic.play();
-// Запуск по клику в любом месте страницы
+//bgMusic.play(); //просто запустить музыку при загрузке html нельзя, нужно дождаться какой нибудь активности пользователя.
+
 let bgMusicWasPlayed = false;
 function playBgMusic(){
 	if (!bgMusicWasPlayed) {
 		bgMusic.play()
-        .then(() => bgMusicWasPlayed = true)
+        .then(() => {bgMusicWasPlayed = true; unsubscribeKeyDown();})//если удалось запустить музыку, то отписываемся от событий запуска музыки.
         .catch(e => console.error("Ошибка воспроизведения:", e));
     }
 }
 
-// function unsubscribeKeyDown() {
-// 	 window.removeEventListener('keydown', handleKeyDown); // Убираем обработчик
-// 	 alert('Вы успешно отписались от прослушивания клавиш!'); }
+function unsubscribeKeyDown() {
+	document.removeEventListener('click', playBgMusic);
+	window.removeEventListener('keydown', playBgMusic); // Убираем обработчик
+	//alert('Вы успешно отписались от прослушивания клавиш!'); 
+}
 
-document.addEventListener('click', () => { playBgMusic(); });
-window.addEventListener('keydown', () => { playBgMusic(); });
+// Запуск по клику мышкой в любом месте страницы, либо нажатии клавиши
+document.addEventListener('click', playBgMusic);
+window.addEventListener('keydown', playBgMusic);
 //это не работает если не разрешено автовоспроизведение. в консоли пишет: ошибка воспроизведения.
 // document.addEventListener("visibilitychange", () => { 
 // 	if (!document.hidden) { 
 // 		playBgMusic(); 
 // 	}
 // });
+//конец блока про фоновую музыку.
+//-----------------------------------------------------------------
+
 
 // Если браузер блокирует автоматическое воспроизведение аудио/видео на сайте, вы можете вручную дать разрешение. Вот как это сделать в популярных браузерах:
 
