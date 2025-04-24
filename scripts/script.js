@@ -666,13 +666,37 @@ const bombToPerimetrSound = new Audio('sound/mixkit-sword-pierces-armor-2761.wav
 const tankToTankSound = new Audio('sound/mixkit-knife-fast-hit-2184.wav');
 const tankExplosionSound = new Audio('sound/mixkit-explosion-with-rocks-debris-1703.wav');
 
-const backgroundMusic = new Audio('sound/8-bit launge.mp3');
+const bgMusic = new Audio('sound/8-bit launge.mp3');
 const volumeControl = document.getElementById('volumeControl');
+volumeControl.value = 0.25;
+bgMusic.volume = 0.25;
 volumeControl.addEventListener('input', () => {
-	backgroundMusic.volume = volumeControl.value;
+	bgMusic.volume = volumeControl.value;
   });
-backgroundMusic.loop = true;
-backgroundMusic.play();
+  bgMusic.loop = true;
+//bgMusic.play();
+// Запуск по клику в любом месте страницы
+let bgMusicWasPlayed = false;
+function playBgMusic(){
+	if (!bgMusicWasPlayed) {
+		bgMusic.play()
+        .then(() => bgMusicWasPlayed = true)
+        .catch(e => console.error("Ошибка воспроизведения:", e));
+    }
+}
+
+// function unsubscribeKeyDown() {
+// 	 window.removeEventListener('keydown', handleKeyDown); // Убираем обработчик
+// 	 alert('Вы успешно отписались от прослушивания клавиш!'); }
+
+document.addEventListener('click', () => { playBgMusic(); });
+window.addEventListener('keydown', () => { playBgMusic(); });
+//это не работает если не разрешено автовоспроизведение. в консоли пишет: ошибка воспроизведения.
+// document.addEventListener("visibilitychange", () => { 
+// 	if (!document.hidden) { 
+// 		playBgMusic(); 
+// 	}
+// });
 
 // Если браузер блокирует автоматическое воспроизведение аудио/видео на сайте, вы можете вручную дать разрешение. Вот как это сделать в популярных браузерах:
 
