@@ -66,6 +66,8 @@ const t1 = {
 	exploding: false,
 	destroyedFront: false,
 	destroyed: false,
+	gunIsReady: true, //готово ли орудие к выстрелу или перезаряжается
+	gunReloadTime: 500, //мсек. время перезарядки орудия. (так как звуки неуспевают обрабатываться, то уменьшим частоту выстрелов.)
 	};
 //получаем второй танк
 const svg_t2 = document.getElementById('t2'); 
@@ -99,6 +101,8 @@ const t2 = {
 	exploding: false,
 	destroyedFront: false,
 	destroyed: false,
+	gunIsReady: true, //готово ли орудие к выстрелу или перезаряжается
+	gunReloadTime: 500, //мсек. время перезарядки орудия. (так как звуки неуспевают обрабатываться, то уменьшим частоту выстрелов.)
   };
 
   const tanks = [];
@@ -578,7 +582,7 @@ const tankExplosionSound = new SoundPool('sound/mixkit-explosion-with-rocks-debr
 
 function shot(tank, bombsPool){
 	const bomb = bombsPool.find((bomb) => bomb.flying === false && bomb.exploding === false );
-	if(bomb !== undefined){
+	if(bomb !== undefined && tank.gunIsReady){
 		let sumAngle = tank.k_angle + tank.b_angle;
 		let dx = Math.cos(sumAngle * Math.PI / 180) * 35; //35 - это длинна дула (от центра башни до конца дула). Чтобы снаряд появлялся на конце дула.
 		let dy = Math.sin(sumAngle * Math.PI / 180) * 35; //вниз - положительный угол, вверх - отрицательный. вправо = 0.
@@ -598,6 +602,8 @@ function shot(tank, bombsPool){
 		//shotSound.currentTime = 0; // Перематываем звук в начало
 		//shotSound.play();
 		shotSoundPool.play();
+		tank.gunIsReady = false;
+		setTimeout(() => {tank.gunIsReady = true;}, tank.gunReloadTime);// Задержка перезарядки орудия. (в действительности, много звуков не успевает отрабатывать)
 	}
 }
 
