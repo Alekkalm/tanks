@@ -456,12 +456,13 @@ const shotSound = new Audio('sound/mixkit-war-explosions-2773.wav');
 
 
 
-//пул звуков выстрела
-class ShotSoundPool {
-    constructor(src, poolSize = 5) {
+//пул звуков
+class SoundPool {
+    constructor(src, poolSize = 5, poolName = "not defined") {
         this.pool = [];
         this.src = src;
-        
+        this.Name = poolName;
+
         // Создаём заранее несколько звуков
         for (let i = 0; i < poolSize; i++) {
             const audio = new Audio(src);
@@ -482,16 +483,29 @@ class ShotSoundPool {
             const newSound = new Audio(this.src);
             newSound.play().catch(e => console.log("Не удалось воспроизвести:", e));
             this.pool.push(newSound);
+			console.log("увеличен пулл звуков ", this.Name, "длинна пула: ", this.pool.length);
         }
     }
 }
 
+//(при параллельной игре два играка легко делают пул звуков выстрела и промаха до 30 единиц на двоих)
 // Создаем пул звуков выстрела
-const shotSoundPool = new ShotSoundPool('sound/mixkit-war-explosions-2773.wav', 10);//в количестве 10 шт
+const shotSoundPool = new SoundPool('sound/mixkit-war-explosions-2773.wav', 10, "звук выстрела");//в количестве 10 шт
 
-// При выстреле
-//shotSoundPool.play();
+// const bombToTankSound = new Audio('sound/mixkit-hitting-metal-armor-2775.wav');
+// const bombToPerimetrSound = new Audio('sound/mixkit-sword-pierces-armor-2761.wav');
+// const tankToTankSound = new Audio('sound/mixkit-knife-fast-hit-2184.wav');
+// const tankExplosionSound = new Audio('sound/mixkit-explosion-with-rocks-debris-1703.wav');
 
+// Создаем пул звуков попадания по танку
+const bombToTankSound = new SoundPool('sound/mixkit-hitting-metal-armor-2775.wav', 10, "звук попадания снаряда по танку");
+// Создаем пул звуков промаха
+const bombToPerimetrSound = new SoundPool('sound/mixkit-sword-pierces-armor-2761.wav', 10, "звук промаха");
+// Создаем звук удара танка о препятствие (из за того что при наезде на препаятствие, танк отодвигается назад, то в следующем кадре он наезжает заново, из-за этого
+// пулл звуков расширялся до 34. поэтому убрал пул, оставил один звук.)
+const tankToTankSound = new Audio('sound/mixkit-knife-fast-hit-2184.wav');
+// Создаем пул звуков взрывов танка
+const tankExplosionSound = new SoundPool('sound/mixkit-explosion-with-rocks-debris-1703.wav', 2, "звук попадания снаряда по танку");
 
 
 
@@ -706,10 +720,7 @@ function t2collision(){
 // }
 
 
-const bombToTankSound = new Audio('sound/mixkit-hitting-metal-armor-2775.wav');
-const bombToPerimetrSound = new Audio('sound/mixkit-sword-pierces-armor-2761.wav');
-const tankToTankSound = new Audio('sound/mixkit-knife-fast-hit-2184.wav');
-const tankExplosionSound = new Audio('sound/mixkit-explosion-with-rocks-debris-1703.wav');
+
 
 //Фоновая музыка
 //------------------------------------------------------------
