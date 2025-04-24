@@ -456,6 +456,50 @@ const shotSound = new Audio('sound/mixkit-war-explosions-2773.wav');
 
 
 
+//пул звуков выстрела
+class ShotSoundPool {
+    constructor(src, poolSize = 5) {
+        this.pool = [];
+        this.src = src;
+        
+        // Создаём заранее несколько звуков
+        for (let i = 0; i < poolSize; i++) {
+            const audio = new Audio(src);
+            audio.preload = 'auto';
+            this.pool.push(audio);
+        }
+    }
+
+    play() {
+        // Ищем первый доступный звук (который не играет)
+        const availableSound = this.pool.find(sound => sound.paused || sound.ended);
+        
+        if (availableSound) {
+            availableSound.currentTime = 0; // Перематываем
+            availableSound.play().catch(e => console.log("Не удалось воспроизвести:", e));
+        } else {
+            // Если все звуки заняты, создаём новый (но это редко нужно)
+            const newSound = new Audio(this.src);
+            newSound.play().catch(e => console.log("Не удалось воспроизвести:", e));
+            this.pool.push(newSound);
+        }
+    }
+}
+
+// Создаем пул звуков выстрела
+const shotSoundPool = new ShotSoundPool('sound/mixkit-war-explosions-2773.wav', 10);//в количестве 10 шт
+
+// При выстреле
+//shotSoundPool.play();
+
+
+
+
+
+
+
+
+
 function shot(tank, bombsPool){
 	const bomb = bombsPool.find((bomb) => bomb.flying === false && bomb.exploding === false );
 	if(bomb !== undefined){
@@ -476,7 +520,8 @@ function shot(tank, bombsPool){
 		bombText.style.opacity = 1;
 		//explosion.style.opacity = 0;
 		//shotSound.currentTime = 0; // Перематываем звук в начало
-		shotSound.play();
+		//shotSound.play();
+		shotSoundPool.play();
 	}
 }
 
