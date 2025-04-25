@@ -67,7 +67,7 @@ const t1 = {
 	destroyedFront: false,
 	destroyed: false,
 	gunIsReady: true, //готово ли орудие к выстрелу или перезаряжается
-	gunReloadTime: 500, //мсек. время перезарядки орудия. (так как звуки неуспевают обрабатываться, то уменьшим частоту выстрелов.)
+	gunReloadTime: 0, //мсек. время перезарядки орудия. (так как звуки неуспевают обрабатываться, то уменьшим частоту выстрелов.)
 	};
 //получаем второй танк
 const svg_t2 = document.getElementById('t2'); 
@@ -102,7 +102,7 @@ const t2 = {
 	destroyedFront: false,
 	destroyed: false,
 	gunIsReady: true, //готово ли орудие к выстрелу или перезаряжается
-	gunReloadTime: 500, //мсек. время перезарядки орудия. (так как звуки неуспевают обрабатываться, то уменьшим частоту выстрелов.)
+	gunReloadTime: 0, //мсек. время перезарядки орудия. (так как звуки неуспевают обрабатываться, то уменьшим частоту выстрелов.)
   };
 
   const tanks = [];
@@ -466,13 +466,14 @@ class SoundPool {
         this.pool = [];
         this.src = src;
         this.Name = poolName;
+		this.mainAudio = new Audio(src); // Создаем главный аудиоэлемент (но не добавляем в DOM)
+		this.preload = 'auto';
+		//audio.load();
 
         // Создаём заранее несколько звуков
         for (let i = 0; i < poolSize; i++) {
-            const audio = new Audio(src);
-            audio.preload = 'auto';
-			audio.load();
-            this.pool.push(audio);
+            const clone = this.mainAudio.cloneNode(true); // true = глубокое клонирование
+			this.pool.push(clone);
         }
     }
 
@@ -485,7 +486,7 @@ class SoundPool {
             availableSound.play().catch(e => console.log("Не удалось воспроизвести:", e));
         } else {
             // Если все звуки заняты, создаём новый (но это редко нужно)
-            const newSound = new Audio(this.src);
+            const newSound = this.mainAudio.cloneNode(true); // true = глубокое клонирование
             newSound.play().catch(e => console.log("Не удалось воспроизвести:", e));
             this.pool.push(newSound);
 			console.log("увеличен пулл звуков ", this.Name, "длинна пула: ", this.pool.length);
