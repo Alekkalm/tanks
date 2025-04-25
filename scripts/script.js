@@ -491,6 +491,16 @@ class SoundPool {
 			console.log("увеличен пулл звуков ", this.Name, "длинна пула: ", this.pool.length);
         }
     }
+
+	init(){
+		for (let i = 0; i < this.pool.length; i++) {
+            const sound = this.pool[i];
+			sound.play().then(() => {
+				sound.pause();
+				sound.currentTime = 0;
+			}).catch(e => console.log("Предзагрузка звука из пула: ", this.Name, "[",i,"]: ", e));
+        }
+	}
 }
 
 
@@ -573,7 +583,12 @@ const tankToTankSound = new Audio('sound/mixkit-knife-fast-hit-2184.wav');
 // Создаем пул звуков взрывов танка
 const tankExplosionSound = new SoundPool('sound/mixkit-explosion-with-rocks-debris-1703.wav', 2, "звук попадания снаряда по танку");
 
-
+function loadSounds(){
+	shotSoundPool.init();
+	bombToTankSound.init();
+	tankExplosionSound.init();
+	playBgMusic();
+}
 
 
 
@@ -818,9 +833,11 @@ function unsubscribeKeyDown() {
 	//alert('Вы успешно отписались от прослушивания клавиш!'); 
 }
 
+
+document.getElementById('loadSounds').addEventListener('click', loadSounds, { once: true });
 // Запуск по клику мышкой в любом месте страницы, либо нажатии клавиши
-document.addEventListener('click', playBgMusic, { once: true });
-window.addEventListener('keydown', playBgMusic, { once: true });//при нажатии стрелочек - не запускается. при нажатии обычных клавиш - запускается.
+//document.addEventListener('click', playBgMusic, { once: true });
+//window.addEventListener('keydown', playBgMusic, { once: true });//при нажатии стрелочек - не запускается. при нажатии обычных клавиш - запускается.
 //это не работает если не разрешено автовоспроизведение. в консоли пишет: ошибка воспроизведения.
 // document.addEventListener("visibilitychange", () => { 
 // 	if (!document.hidden) { 
