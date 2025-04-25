@@ -806,11 +806,12 @@ let bgMusicWasPlayed = false;
 function playBgMusic(){
 	if (!bgMusicWasPlayed) {
 		bgMusic.play()
-        .then(() => {bgMusicWasPlayed = true; unsubscribeKeyDown();})//если удалось запустить музыку, то отписываемся от событий запуска музыки.
+        .then(() => {bgMusicWasPlayed = true;})
         .catch(e => console.error("Ошибка воспроизведения:", e));
     }
 }
 
+//не используем
 function unsubscribeKeyDown() {
 	document.removeEventListener('click', playBgMusic);
 	window.removeEventListener('keydown', playBgMusic); // Убираем обработчик
@@ -818,8 +819,8 @@ function unsubscribeKeyDown() {
 }
 
 // Запуск по клику мышкой в любом месте страницы, либо нажатии клавиши
-document.addEventListener('click', playBgMusic);
-window.addEventListener('keydown', playBgMusic);
+document.addEventListener('click', playBgMusic, { once: true });
+window.addEventListener('keydown', playBgMusic, { once: true });//при нажатии стрелочек - не запускается. при нажатии обычных клавиш - запускается.
 //это не работает если не разрешено автовоспроизведение. в консоли пишет: ошибка воспроизведения.
 // document.addEventListener("visibilitychange", () => { 
 // 	if (!document.hidden) { 
