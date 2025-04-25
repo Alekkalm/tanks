@@ -486,10 +486,12 @@ class SoundPool {
             availableSound.play().catch(e => console.log("Не удалось воспроизвести:", e));
         } else {
             // Если все звуки заняты, создаём новый (но это редко нужно)
-            const newSound = this.mainAudio.cloneNode(true); // true = глубокое клонирование
-            newSound.play().catch(e => console.log("Не удалось воспроизвести:", e));
-            this.pool.push(newSound);
-			console.log("увеличен пулл звуков ", this.Name, "длинна пула: ", this.pool.length);
+            // const newSound = this.mainAudio.cloneNode(true); // true = глубокое клонирование
+            // newSound.play().catch(e => console.log("Не удалось воспроизвести:", e));
+            // this.pool.push(newSound);
+			// console.log("увеличен пулл звуков ", this.Name, "длинна пула: ", this.pool.length);
+
+			console.log("нехватка звуков в пуле ", this.Name, "длинна пула: ", this.pool.length);
         }
     }
 
