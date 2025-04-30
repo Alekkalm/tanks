@@ -244,61 +244,21 @@ const BombsPool = [...t1BombsPool, ...t2BombsPool];
 		let bAngle = t1.k_angle + t1.b_angle;
 		let b_cos = Math.cos(bAngle* Math.PI / 180);
 		let b_sin = Math.sin(bAngle* Math.PI / 180);
-		//t1kArrow.style.transform = `translate(${startX}px, ${startY}px) translate(0px, 10px) rotate(${kAngle}deg) translate(0px, -10px)`;
-		//t1kArrow.style.transform = `translate(${startX}px, ${startY}px) rotate(${kAngle}deg) translate(35px, -10px)`;
 
-		const scale = 0.3;
-// Меняем viewBox и размеры SVG, чтобы линии масштабировались, но stroke-width остаётся 1
-// t1kArrow.setAttribute('width', 100 * scale);
-// t1kArrow.setAttribute('height', 20 * scale);
-// t1kArrow.setAttribute('viewBox', `0 0 100 20`); // viewBox остаётся исходным
+		let sAddAngle = Math.atan(t1.speed/BOMB_SPEED)*180/Math.PI;
+		let sAngle = bAngle + sAddAngle;
+		let sLength = Math.sqrt(t1.speed*t1.speed + BOMB_SPEED*BOMB_SPEED);
 
- 		// let line = t1kArrowLine.querySelector('line');
-		// line.setAttribute('transform', `scale(${Math.abs(t1.speed)*0.1},1)`);
 		//t1.speed = Math.sign(t1.speed)*2;
 		t1kArrowLine.style.transform = `translate(${startX+35*b_cos}px, ${startY+35*b_sin}px) rotate(${kAngle}deg) translate(0px, -5px) scale(${t1.speed*0.1},1)`;
 		t1kArrow.style.transform = `translate(${startX+35*b_cos}px, ${startY+35*b_sin}px) rotate(${kAngle}deg) translate(0px, -5px) translate(${t1.speed*10+(Math.sign(t1.speed)==1?-10:10)}px, 0px) scale(${Math.sign(t1.speed)},1)`;
 		
-		// let     line = t1bArrowLine.querySelector('line');
-		// line.setAttribute('transform', `scale(${BOMB_SPEED*0.1},1)`);
 		t1bArrowLine.style.transform = `translate(${startX}px, ${startY}px) rotate(${bAngle}deg) translate(35px, 0px) translate(0px, -5px) scale(${BOMB_SPEED*0.1},1)`;
 		t1bArrow.style.transform = `translate(${startX}px, ${startY}px) rotate(${bAngle}deg) translate(35px, 0px) translate(0px, -5px) translate(${BOMB_SPEED*10-10}px, 0px)`;
 
-		// t1kArrow.style.transform = `translate(${startX+35*b_cos}px, ${startY+35*b_sin}px) rotate(${kAngle}deg) scale(${t1.speed*0.1*3}) translate(0px, -10px)`;
-		// t1bArrow.style.transform = `translate(${startX}px, ${startY}px) rotate(${bAngle}deg) translate(35px, 0px) scale(${BOMB_SPEED*0.1}) translate(0px, -10px)`;
+		t1sArrowLine.style.transform = `translate(${startX+35*b_cos}px, ${startY+35*b_sin}px) rotate(${sAngle}deg) translate(0px, -5px) scale(${sLength*0.1},1)`;
+		t1sArrow.style.transform = `translate(${startX+35*b_cos}px, ${startY+35*b_sin}px) rotate(${sAngle}deg) translate(0px, -5px) translate(${t1.speed*10+(Math.sign(t1.speed)==1?-10:10)}px, 0px) scale(${Math.sign(t1.speed)},1)`;
 
-
-		// // Компенсация толщины обводки
-		// const lines = t1kArrow.querySelectorAll('line');
-		// lines.forEach(line => {
-		// 	// const originalStrokeWidth = parseFloat(line.getAttribute('stroke-width'));
-		// 	// line.setAttribute('stroke-width', originalStrokeWidth / scale);
-		// 	line.setAttribute('stroke-width', 1);
-		// });
-
-
-		// const group = t1kArrow.querySelector('g');
-		// group.setAttribute('transform', 'scale(0.3)'); // Размер линии увеличится, но толщина останется 2
-
-		// const scale = 0.5;
-		// const lines = t1kArrow.querySelectorAll('line');
-		
-		// lines.forEach(line => {
-		// 	const x1 = parseFloat(line.getAttribute('x1')) * scale;
-		// 	const y1 = parseFloat(line.getAttribute('y1')) * scale;
-		// 	const x2 = parseFloat(line.getAttribute('x2')) * scale;
-		// 	const y2 = parseFloat(line.getAttribute('y2')) * scale;
-			
-		// 	line.setAttribute('x1', x1);
-		// 	line.setAttribute('y1', y1);
-		// 	line.setAttribute('x2', x2);
-		// 	line.setAttribute('y2', y2);
-		// });
-
-
-
-		// t1kArrow.style.transform = `translate(${startX+35*b_cos}px, ${startY+35*b_sin}px) rotate(${kAngle}deg) translate(0px, -10px)`;
-		// t1bArrow.style.transform = `translate(${startX}px, ${startY}px) rotate(${bAngle}deg) translate(35px, 0px) scale(${BOMB_SPEED*0.1}) translate(0px, -10px)`;
 	}
 	
 
