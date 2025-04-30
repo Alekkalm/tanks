@@ -1,5 +1,8 @@
 'use strict'; //всегда объявлять переменные
 
+//константы
+const BOMB_SPEED = 8;
+
 //FPS
 let lastTimeOneSec = performance.now(); // Время последнего кадра
 let lastTime = performance.now(); // Время последнего кадра
@@ -197,6 +200,107 @@ const BombsPool = [...t1BombsPool, ...t2BombsPool];
 		id: i,
 	  });
 	}
+
+	//стрелки
+	const arrowTemplate = document.getElementById('arrowTemplate'); // Находим шаблон
+	const arrowLineTemplate = document.getElementById('arrowLineTemplate'); // Находим шаблон
+	arrowTemplate.style.transformOrigin = '0 0';
+	arrowLineTemplate.style.transformOrigin = '0 0';
+
+	const t1bArrow = arrowTemplate.cloneNode(true); // стрелка башни
+	const t1bArrowLine = arrowLineTemplate.cloneNode(true); // стрелка башни
+	t1bArrow.style.display = 'block'; // Делаем элемент видимым
+	t1bArrowLine.style.display = 'block'; // Делаем элемент видимым
+	document.body.appendChild(t1bArrow);
+	document.body.appendChild(t1bArrowLine);
+
+	const t1kArrow = arrowTemplate.cloneNode(true); // стрелка корпуса
+	const t1kArrowLine = arrowLineTemplate.cloneNode(true); // стрелка корпуса
+	t1kArrow.style.display = 'block'; // Делаем элемент видимым
+	t1kArrowLine.style.display = 'block'; // Делаем элемент видимым
+	document.body.appendChild(t1kArrow);
+	document.body.appendChild(t1kArrowLine);
+
+	const t1sArrow = arrowTemplate.cloneNode(true); // суммарная стрелка
+	const t1sArrowLine = arrowLineTemplate.cloneNode(true); // суммарная стрелка
+	t1sArrow.style.display = 'block'; // Делаем элемент видимым
+	t1sArrowLine.style.display = 'block'; // Делаем элемент видимым
+	document.body.appendChild(t1sArrow);
+	document.body.appendChild(t1sArrowLine);
+
+	// const t1ArrowHelper1 = arrowHelperTemplate.cloneNode(true); // вспомогательная линия
+	// const t1ArrowHelper2 = arrowHelperTemplate.cloneNode(true); // вспомогательная линия
+
+	// const t2bArrow = arrowTemplate.cloneNode(true); // стрелка башни
+	// const t2kArrow = arrowTemplate.cloneNode(true); // стрелка корпуса
+	// const t2sArrow = arrowTemplate.cloneNode(true); // суммарная стрелка
+ 	// const t2ArrowHelper1 = arrowHelperTemplate.cloneNode(true); // вспомогательная линия
+	// const t2ArrowHelper2 = arrowHelperTemplate.cloneNode(true); // вспомогательная линия
+
+	function drawArrows(){
+		let startX = t1.x + t1.center.x; 
+		let startY = t1.y + t1.center.y;
+		let kAngle = t1.k_angle; 
+		let bAngle = t1.k_angle + t1.b_angle;
+		let b_cos = Math.cos(bAngle* Math.PI / 180);
+		let b_sin = Math.sin(bAngle* Math.PI / 180);
+		//t1kArrow.style.transform = `translate(${startX}px, ${startY}px) translate(0px, 10px) rotate(${kAngle}deg) translate(0px, -10px)`;
+		//t1kArrow.style.transform = `translate(${startX}px, ${startY}px) rotate(${kAngle}deg) translate(35px, -10px)`;
+
+		const scale = 0.3;
+// Меняем viewBox и размеры SVG, чтобы линии масштабировались, но stroke-width остаётся 1
+// t1kArrow.setAttribute('width', 100 * scale);
+// t1kArrow.setAttribute('height', 20 * scale);
+// t1kArrow.setAttribute('viewBox', `0 0 100 20`); // viewBox остаётся исходным
+
+ 		// let line = t1kArrowLine.querySelector('line');
+		// line.setAttribute('transform', `scale(${Math.abs(t1.speed)*0.1},1)`);
+		//t1.speed = Math.sign(t1.speed)*2;
+		t1kArrowLine.style.transform = `translate(${startX+35*b_cos}px, ${startY+35*b_sin}px) rotate(${kAngle}deg) translate(0px, -5px) scale(${t1.speed*0.1},1)`;
+		t1kArrow.style.transform = `translate(${startX+35*b_cos}px, ${startY+35*b_sin}px) rotate(${kAngle}deg) translate(0px, -5px) translate(${t1.speed*10+(Math.sign(t1.speed)==1?-10:10)}px, 0px) scale(${Math.sign(t1.speed)},1)`;
+		
+		// let     line = t1bArrowLine.querySelector('line');
+		// line.setAttribute('transform', `scale(${BOMB_SPEED*0.1},1)`);
+		t1bArrowLine.style.transform = `translate(${startX}px, ${startY}px) rotate(${bAngle}deg) translate(35px, 0px) translate(0px, -5px) scale(${BOMB_SPEED*0.1},1)`;
+		t1bArrow.style.transform = `translate(${startX}px, ${startY}px) rotate(${bAngle}deg) translate(35px, 0px) translate(0px, -5px) translate(${BOMB_SPEED*10-10}px, 0px)`;
+
+		// t1kArrow.style.transform = `translate(${startX+35*b_cos}px, ${startY+35*b_sin}px) rotate(${kAngle}deg) scale(${t1.speed*0.1*3}) translate(0px, -10px)`;
+		// t1bArrow.style.transform = `translate(${startX}px, ${startY}px) rotate(${bAngle}deg) translate(35px, 0px) scale(${BOMB_SPEED*0.1}) translate(0px, -10px)`;
+
+
+		// // Компенсация толщины обводки
+		// const lines = t1kArrow.querySelectorAll('line');
+		// lines.forEach(line => {
+		// 	// const originalStrokeWidth = parseFloat(line.getAttribute('stroke-width'));
+		// 	// line.setAttribute('stroke-width', originalStrokeWidth / scale);
+		// 	line.setAttribute('stroke-width', 1);
+		// });
+
+
+		// const group = t1kArrow.querySelector('g');
+		// group.setAttribute('transform', 'scale(0.3)'); // Размер линии увеличится, но толщина останется 2
+
+		// const scale = 0.5;
+		// const lines = t1kArrow.querySelectorAll('line');
+		
+		// lines.forEach(line => {
+		// 	const x1 = parseFloat(line.getAttribute('x1')) * scale;
+		// 	const y1 = parseFloat(line.getAttribute('y1')) * scale;
+		// 	const x2 = parseFloat(line.getAttribute('x2')) * scale;
+		// 	const y2 = parseFloat(line.getAttribute('y2')) * scale;
+			
+		// 	line.setAttribute('x1', x1);
+		// 	line.setAttribute('y1', y1);
+		// 	line.setAttribute('x2', x2);
+		// 	line.setAttribute('y2', y2);
+		// });
+
+
+
+		// t1kArrow.style.transform = `translate(${startX+35*b_cos}px, ${startY+35*b_sin}px) rotate(${kAngle}deg) translate(0px, -10px)`;
+		// t1bArrow.style.transform = `translate(${startX}px, ${startY}px) rotate(${bAngle}deg) translate(35px, 0px) scale(${BOMB_SPEED*0.1}) translate(0px, -10px)`;
+	}
+	
 
 
 //окно "Победа"
@@ -608,7 +712,7 @@ function shot(tank, bombsPool){
 		bomb.x = tank.x + 30 + dx; //+30 - это центр танка
 		bomb.y = tank.y + 30 + dy; //+30 - центр танка
 		bomb.angle = sumAngle;//bombAngle,
-		bomb.speed = 8;
+		bomb.speed = BOMB_SPEED;
 		bomb.flying = true;
 		//bomb.svg.style.display = 'block'; // Делаем элемент видимым
 		const bombCircle = bomb.svg.querySelector('.bomb');//ищем по названию класса
@@ -1174,6 +1278,8 @@ function updateAnts() {
 		t2.svg_tb.style.transform = `translate(35px, 35px) rotate(${t2.b_angle}deg) translate(-35px, -35px)`;
 		//t2.kRect = t2.svg_tk.getBoundingClientRect();//после перемещения, пересчитываем BoundingRectangle корпуса танка
 	}
+
+	drawArrows();
 
 	//снаряды
 	const bombsToDelete = [];
